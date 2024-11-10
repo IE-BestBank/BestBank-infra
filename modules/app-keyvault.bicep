@@ -50,9 +50,12 @@ resource keyVault 'Microsoft.KeyVault/vaults@2022-07-01' = {
     enabledForTemplateDeployment: enableVaultForTemplateDeployment
     enabledForDiskEncryption: enableVaultForDiskEncryption
     softDeleteRetentionInDays: softDeleteRetentionInDays
+    tenantId: subscription().tenantId
     sku: {
       name: sku
       family: 'A'
     }
 }
 }
+
+//need to add outputs 

@@ -77,6 +77,22 @@ param softDeleteRetentionInDays int = 90
 param keyVaultTags object
 
 
+// @sys.description('The name of the Static Web App')
+// param staticWebAppName string
+// @sys.description('SKU for the Static Web App')
+// @allowed([ 'Free', 'Standard' ])
+// param staticWebAppSku string = 'Free'
+// @sys.description('Location of the Static Web App')
+// param staticWebAppLocation string
+// @sys.description('Personal Access Token for accessing the GitHub repository')
+// @secure()
+// param staticWebAppRepositoryToken string?
+// @sys.description('GitHub repository URL for Static Web App deployment')
+// param staticWebAppRepositoryUrl string?
+// @sys.description('GitHub branch name for Static Web App deployment')
+// param staticWebAppBranch string?
+
+
 resource postgresSQLServer 'Microsoft.DBforPostgreSQL/flexibleServers@2022-12-01' = {
   name: postgreSQLServerName
   location: location
@@ -173,3 +189,16 @@ module keyVault 'modules/app-keyvault.bicep' = {
     tags: keyVaultTags
   }
 }
+
+
+// module staticWebApp 'modules/app-swa.bicep' = {
+//   name: 'staticWebAppDeployment'
+//   params: {
+//     name: staticWebAppName
+//     sku: staticWebAppSku
+//     location: staticWebAppLocation
+//     repositoryToken: staticWebAppRepositoryToken
+//     repositoryUrl: staticWebAppRepositoryUrl
+//     branch: staticWebAppBranch
+//   }
+// }
