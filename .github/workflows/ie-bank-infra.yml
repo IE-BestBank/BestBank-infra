@@ -74,8 +74,8 @@ jobs:
         - name: deploy
           uses: azure/arm-deploy@v2
           with:
-            subscriptionId: ${{ env.SUBSCRIPTION_ID_DEV }}
-            resourceGroupName: ${{ env.RESOURCE_GROUP_DEV }}
+            subscriptionId: ${{ env.SUBSCRIPTION_ID_UAT }}
+            resourceGroupName: ${{ env.RESOURCE_GROUP_UAT }}
             template: ./main.bicep
             parameters: ./parameters/uat.bicepparam appServiceAPIEnvVarDBPASS=${{ secrets.DBPASS }} appServiceAPIDBHostDBUSER=${{ secrets.DBUSER }}
             deploymentName: ${{ env.USER_ALIAS }}-uat
