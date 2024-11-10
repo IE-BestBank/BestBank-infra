@@ -44,6 +44,20 @@ param appServiceAPIDBHostFLASK_APP string
 @sys.description('The value for the environment variable FLASK_DEBUG')
 param appServiceAPIDBHostFLASK_DEBUG string
 
+@sys.description('Name of the Log Analytics workspace')
+param logAnalyticsWorkspaceName string
+@sys.description('SKU for the Log Analytics workspace')
+param logAnalyticsSkuName string
+@sys.description('Retention period for data in Log Analytics workspace')
+param logAnalyticsDataRetention int
+@sys.description('The network access type for ingestion')
+param publicNetworkAccessForIngestion string
+@sys.description('The network access type for querying')
+param publicNetworkAccessForQuery string
+
+
+
+
 resource postgresSQLServer 'Microsoft.DBforPostgreSQL/flexibleServers@2022-12-01' = {
   name: postgreSQLServerName
   location: location
@@ -109,3 +123,19 @@ module appService 'modules/app-service.bicep' = {
 }
 
 output appServiceAppHostName string = appService.outputs.appServiceAppHostName
+
+
+module logAnalytics 'modules/app-log.bicep' = {
+  name: 'logAnalyticsWorkspaceDeployment'
+  params: {
+    name: logAnalyticsWorkspaceName
+    location: location
+    skuName: logAnalyticsSkuName
+    dataRetention: logAnalyticsDataRetention
+    publicNetworkAccessForIngestion: publicNetworkAccessForIngestion
+    publicNetworkAccessForQuery: publicNetworkAccessForQuery
+    tags: {
+      Environment: environmentType
+    }
+  }
+}

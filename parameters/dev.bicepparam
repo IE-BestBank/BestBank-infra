@@ -14,3 +14,11 @@ param appServiceAPIEnvVarDBPASS =  'github-secret-replaced-in-workflow'
 param appServiceAPIEnvVarDBHOST =  'akhreiche-dbsrv-dev.postgres.database.azure.com'
 param appServiceAPIEnvVarDBNAME =  'akhreiche-db-dev'
 param appServiceAPIEnvVarENV =  'dev'
+
+
+
+param logAnalyticsWorkspaceName = 'akhreiche-log-dev'
+param logAnalyticsSkuName = 'PerGB2018'  
+param logAnalyticsDataRetention = 30  
+param publicNetworkAccessForIngestion = 'Enabled'
+param publicNetworkAccessForQuery = 'Enabled'
