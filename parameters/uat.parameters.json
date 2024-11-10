@@ -6,19 +6,19 @@
             "value": "nonprod"
         },
         "postgreSQLServerName": {
-            "value": "aguadamillas-dbsrv-uat"
+            "value": "akhreiche-dbsrv-uat"
         },
         "postgreSQLDatabaseName": {
-            "value": "aguadamillas-db-uat"
+            "value": "akhreiche-db-uat"
         },
         "appServicePlanName": {
-            "value": "aguadamillas-asp-uat"
+            "value": "akhreiche-asp-uat"
         },
         "appServiceAPIAppName": {
-            "value": "aguadamillas-be-uat"
+            "value": "akhreiche-be-uat"
         },
         "appServiceAppName": {
-            "value": "aguadamillas-fe-uat"
+            "value": "akhreiche-fe-uat"
         },
         "location": {
             "value": "North Europe"
