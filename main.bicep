@@ -56,6 +56,25 @@ param publicNetworkAccessForIngestion string
 param publicNetworkAccessForQuery string
 
 
+@sys.description('The Key Vault name')
+param keyVaultName string
+@sys.description('The location for the Key Vault')
+param keyVaultLocation string
+@sys.description('SKU for the Key Vault')
+@allowed(['standard', 'premium'])
+param keyVaultSku string = 'standard'
+@sys.description('Enable Key Vault for deployment')
+param enableVaultForDeployment bool = true
+@sys.description('Enable Key Vault for template deployments')
+param enableVaultForTemplateDeployment bool = true
+@sys.description('Enable Key Vault for disk encryption')
+param enableVaultForDiskEncryption bool = false
+@sys.description('Soft delete retention period in days for Key Vault')
+@minValue(7)
+@maxValue(90)
+param softDeleteRetentionInDays int = 90
+@sys.description('Resource tags for the Key Vault')
+param keyVaultTags object
 
 
 resource postgresSQLServer 'Microsoft.DBforPostgreSQL/flexibleServers@2022-12-01' = {
@@ -137,5 +156,20 @@ module logAnalytics 'modules/app-log.bicep' = {
     tags: {
       Environment: environmentType
     }
+  }
+}
+
+
+module keyVault 'modules/app-keyvault.bicep' = {
+  name: 'keyVaultDeployment'
+  params: {
+    name: keyVaultName
+    location: keyVaultLocation
+    sku: keyVaultSku
+    enableVaultForDeployment: enableVaultForDeployment
+    enableVaultForTemplateDeployment: enableVaultForTemplateDeployment
+    enableVaultForDiskEncryption: enableVaultForDiskEncryption
+    softDeleteRetentionInDays: softDeleteRetentionInDays
+    tags: keyVaultTags
   }
 }
