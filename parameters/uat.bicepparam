@@ -23,17 +23,17 @@ param publicNetworkAccessForIngestion = 'Enabled'
 param publicNetworkAccessForQuery = 'Enabled'
 
 
-param keyVaultName = 'akhreiche-kv-dev'
-param keyVaultLocation = location
-param keyVaultSku = 'standard'  // Set based on your project needs; 'standard' is generally sufficient
-param enableVaultForDeployment = true
-param enableVaultForTemplateDeployment = true
-param enableVaultForDiskEncryption = false  // Set to true if using Azure Disk Encryption
-param softDeleteRetentionInDays = 90
-param keyVaultTags = {
-  Environment: environmentType
-  Project: 'IE_Best_Bank'
-}
+// param keyVaultName = 'akhreiche-kv-dev'
+// param keyVaultLocation = location
+// param keyVaultSku = 'standard'  // Set based on your project needs; 'standard' is generally sufficient
+// param enableVaultForDeployment = true
+// param enableVaultForTemplateDeployment = true
+// param enableVaultForDiskEncryption = false  // Set to true if using Azure Disk Encryption
+// param softDeleteRetentionInDays = 90
+// param keyVaultTags = {
+//   Environment: environmentType
+//   Project: 'IE_Best_Bank'
+// }
 
 
 

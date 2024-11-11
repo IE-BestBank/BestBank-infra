@@ -56,25 +56,25 @@ param publicNetworkAccessForIngestion string
 param publicNetworkAccessForQuery string
 
 
-@sys.description('The Key Vault name')
-param keyVaultName string
-@sys.description('The location for the Key Vault')
-param keyVaultLocation string
-@sys.description('SKU for the Key Vault')
-@allowed(['standard', 'premium'])
-param keyVaultSku string = 'standard'
-@sys.description('Enable Key Vault for deployment')
-param enableVaultForDeployment bool = true
-@sys.description('Enable Key Vault for template deployments')
-param enableVaultForTemplateDeployment bool = true
-@sys.description('Enable Key Vault for disk encryption')
-param enableVaultForDiskEncryption bool = false
-@sys.description('Soft delete retention period in days for Key Vault')
-@minValue(7)
-@maxValue(90)
-param softDeleteRetentionInDays int = 90
-@sys.description('Resource tags for the Key Vault')
-param keyVaultTags object
+// @sys.description('The Key Vault name')
+// param keyVaultName string
+// @sys.description('The location for the Key Vault')
+// param keyVaultLocation string
+// @sys.description('SKU for the Key Vault')
+// @allowed(['standard', 'premium'])
+// param keyVaultSku string = 'standard'
+// @sys.description('Enable Key Vault for deployment')
+// param enableVaultForDeployment bool = true
+// @sys.description('Enable Key Vault for template deployments')
+// param enableVaultForTemplateDeployment bool = true
+// @sys.description('Enable Key Vault for disk encryption')
+// param enableVaultForDiskEncryption bool = false
+// @sys.description('Soft delete retention period in days for Key Vault')
+// @minValue(7)
+// @maxValue(90)
+// param softDeleteRetentionInDays int = 90
+// @sys.description('Resource tags for the Key Vault')
+// param keyVaultTags object
 
 
 // @sys.description('The name of the Static Web App')
@@ -176,19 +176,19 @@ module logAnalytics 'modules/app-log.bicep' = {
 }
 
 
-module keyVault 'modules/app-keyvault.bicep' = {
-  name: 'keyVaultDeployment'
-  params: {
-    name: keyVaultName
-    location: keyVaultLocation
-    sku: keyVaultSku
-    enableVaultForDeployment: enableVaultForDeployment
-    enableVaultForTemplateDeployment: enableVaultForTemplateDeployment
-    enableVaultForDiskEncryption: enableVaultForDiskEncryption
-    softDeleteRetentionInDays: softDeleteRetentionInDays
-    tags: keyVaultTags
-  }
-}
+// module keyVault 'modules/app-keyvault.bicep' = {
+//   name: 'keyVaultDeployment'
+//   params: {
+//     name: keyVaultName
+//     location: keyVaultLocation
+//     sku: keyVaultSku
+//     enableVaultForDeployment: enableVaultForDeployment
+//     enableVaultForTemplateDeployment: enableVaultForTemplateDeployment
+//     enableVaultForDiskEncryption: enableVaultForDiskEncryption
+//     softDeleteRetentionInDays: softDeleteRetentionInDays
+//     tags: keyVaultTags
+//   }
+// }
 
 
 // module staticWebApp 'modules/app-swa.bicep' = {
