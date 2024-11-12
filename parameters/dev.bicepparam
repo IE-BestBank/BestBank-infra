@@ -1,5 +1,6 @@
 using '../main.bicep'
 
+//app-service
 param environmentType = 'nonprod'
 param postgreSQLServerName = 'bestbank-dbsrv-dev'
 param postgreSQLDatabaseName = 'bestbank-db-dev'
@@ -16,7 +17,7 @@ param appServiceAPIEnvVarDBNAME =  'bestbank-db-dev'
 param appServiceAPIEnvVarENV =  'dev'
 
 
-
+// log analytics 
 param logAnalyticsWorkspaceName = 'bestbank-log-dev'
 param logAnalyticsSkuName = 'PerGB2018'  
 param logAnalyticsDataRetention = 30  
@@ -24,5 +25,12 @@ param publicNetworkAccessForIngestion = 'Enabled'
 param publicNetworkAccessForQuery = 'Enabled'
 
 
-
-
+//application insights 
+param appInsightsName = 'bestbank-appinsights-dev'
+param appInsightsApplicationType = 'web'
+param appInsightsWorkspaceResourceId = '/subscriptions/<your-subscription-id>/resourceGroups/<your-resource-group>/providers/Microsoft.OperationalInsights/workspaces/bestbank-log-dev' // Replace with actual resource ID of your Log Analytics workspace
+param appInsightsDisableIpMasking = true
+param appInsightsPublicNetworkAccessForIngestion = 'Enabled'
+param appInsightsPublicNetworkAccessForQuery = 'Enabled'
+param appInsightsRetentionInDays = 365
+param appInsightsSamplingPercentage = 100

@@ -44,6 +44,7 @@ param appServiceAPIDBHostFLASK_APP string
 @sys.description('The value for the environment variable FLASK_DEBUG')
 param appServiceAPIDBHostFLASK_DEBUG string
 
+//log analytics 
 @sys.description('Name of the Log Analytics workspace')
 param logAnalyticsWorkspaceName string
 @sys.description('SKU for the Log Analytics workspace')
@@ -54,6 +55,57 @@ param logAnalyticsDataRetention int
 param publicNetworkAccessForIngestion string
 @sys.description('The network access type for querying')
 param publicNetworkAccessForQuery string
+
+//application insights parameters
+@sys.description('The name of the Application Insights instance')
+param appInsightsName string
+
+@sys.description('Application type for Application Insights')
+@allowed([
+  'web'
+  'other'
+])
+param appInsightsApplicationType string = 'web'
+
+@sys.description('Resource ID of the Log Analytics workspace for Application Insights')
+param appInsightsWorkspaceResourceId string
+
+@sys.description('Disable IP masking for Application Insights')
+param appInsightsDisableIpMasking bool = true
+
+@sys.description('The network access type for ingestion in Application Insights')
+@allowed([
+  'Enabled'
+  'Disabled'
+])
+param appInsightsPublicNetworkAccessForIngestion string = 'Enabled'
+
+@sys.description('The network access type for querying in Application Insights')
+@allowed([
+  'Enabled'
+  'Disabled'
+])
+param appInsightsPublicNetworkAccessForQuery string = 'Enabled'
+
+@sys.description('Retention period in days for Application Insights data')
+@allowed([
+  30
+  60
+  90
+  120
+  180
+  270
+  365
+  550
+  730
+])
+param appInsightsRetentionInDays int = 365
+
+@sys.description('Sampling percentage for Application Insights telemetry')
+@minValue(0)
+@maxValue(100)
+param appInsightsSamplingPercentage int = 100
+
 
 
 resource postgresSQLServer 'Microsoft.DBforPostgreSQL/flexibleServers@2022-12-01' = {
@@ -122,7 +174,7 @@ module appService 'modules/app-service.bicep' = {
 
 output appServiceAppHostName string = appService.outputs.appServiceAppHostName
 
-
+//log analytics 
 module logAnalytics 'modules/app-log.bicep' = {
   name: 'logAnalyticsWorkspaceDeployment'
   params: {
@@ -138,3 +190,22 @@ module logAnalytics 'modules/app-log.bicep' = {
   }
 }
 
+
+// Application Insights Module
+module appInsights 'modules/app-appinsights.bicep' = {
+  name: 'appInsights-${userAlias}'
+  params: {
+    name: appInsightsName
+    applicationType: appInsightsApplicationType
+    workspaceResourceId: appInsightsWorkspaceResourceId
+    disableIpMasking: appInsightsDisableIpMasking
+    publicNetworkAccessForIngestion: appInsightsPublicNetworkAccessForIngestion
+    publicNetworkAccessForQuery: appInsightsPublicNetworkAccessForQuery
+    retentionInDays: appInsightsRetentionInDays
+    samplingPercentage: appInsightsSamplingPercentage
+    location: location
+    tags: {
+      Environment: environmentType
+    }
+  }
+}
