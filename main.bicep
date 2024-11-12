@@ -5,7 +5,7 @@
 ])
 param environmentType string = 'nonprod'
 @sys.description('The user alias to add to the deployment name')
-param userAlias string = 'akhreiche'
+param userAlias string = 'BestBank'
 @sys.description('The PostgreSQL Server name')
 @minLength(3)
 @maxLength(24)
