@@ -67,8 +67,8 @@ param appInsightsName string
 ])
 param appInsightsApplicationType string = 'web'
 
-@description('Required. Resource ID of the Log Analytics workspace which the data will be ingested to.')
-param workspaceResourceId string = ''
+// @description('Required. Resource ID of the Log Analytics workspace which the data will be ingested to.')
+// param workspaceResourceId string = ''
 
 @sys.description('Disable IP masking for Application Insights')
 param appInsightsDisableIpMasking bool = true
