@@ -58,8 +58,8 @@ param samplingPercentage int = 100
 @description('Optional. Tags of the resource.')
 param tags object?
 
-@description('Optional. Enable/Disable usage telemetry for module.')
-param enableTelemetry bool = true
+// @description('Optional. Enable/Disable usage telemetry for module.')
+// param enableTelemetry bool = true
 
 @description('Optional. Location for all Resources.')
 param location string = resourceGroup().location
@@ -76,6 +76,7 @@ resource appInsights 'Microsoft.Insights/components@2020-02-02' = {
   tags: tags
   properties: {
     Application_Type: applicationType
+    kind: applicationType 
     DisableIpMasking: disableIpMasking
     WorkspaceResourceId: workspaceResourceId
     publicNetworkAccessForIngestion: publicNetworkAccessForIngestion

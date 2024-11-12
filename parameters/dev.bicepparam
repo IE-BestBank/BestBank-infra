@@ -18,7 +18,7 @@ param appServiceAPIEnvVarENV =  'dev'
 
 
 // log analytics 
-param logAnalyticsWorkspaceName = 'bestbank-log-dev'
+param logAnalyticsWorkspaceName = 'BestBank-log-dev'
 param logAnalyticsSkuName = 'PerGB2018'  
 param logAnalyticsDataRetention = 30  
 param publicNetworkAccessForIngestion = 'Enabled'
