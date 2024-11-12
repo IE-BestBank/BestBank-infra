@@ -174,7 +174,6 @@ module appService 'modules/app-service.bicep' = {
 
 output appServiceAppHostName string = appService.outputs.appServiceAppHostName
 
-//log analytics 
 module logAnalytics 'modules/app-log.bicep' = {
   name: 'logAnalyticsWorkspaceDeployment'
   params: {
@@ -191,13 +190,12 @@ module logAnalytics 'modules/app-log.bicep' = {
 }
 
 
-// Application Insights Module
 module appInsights 'modules/app-appinsights.bicep' = {
   name: 'appInsights-${userAlias}'
   params: {
     name: appInsightsName
     applicationType: appInsightsApplicationType
-    workspaceResourceId: appInsightsWorkspaceResourceId
+    workspaceResourceId: logAnalytics.outputs.logAnalyticsWorkspaceId // Dynamically set here
     disableIpMasking: appInsightsDisableIpMasking
     publicNetworkAccessForIngestion: appInsightsPublicNetworkAccessForIngestion
     publicNetworkAccessForQuery: appInsightsPublicNetworkAccessForQuery
@@ -209,3 +207,4 @@ module appInsights 'modules/app-appinsights.bicep' = {
     }
   }
 }
+

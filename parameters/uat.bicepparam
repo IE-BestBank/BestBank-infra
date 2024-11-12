@@ -24,9 +24,8 @@ param publicNetworkAccessForIngestion = 'Enabled'
 param publicNetworkAccessForQuery = 'Enabled'
 
 //application insights 
-param appInsightsName = 'bestbank-appinsights-dev'
+param appInsightsName = 'bestbank-appinsights-uat'
 param appInsightsApplicationType = 'web'
-param appInsightsWorkspaceResourceId = '/subscriptions/<your-subscription-id>/resourceGroups/<your-resource-group>/providers/Microsoft.OperationalInsights/workspaces/bestbank-log-dev' // Replace with actual resource ID of your Log Analytics workspace
 param appInsightsDisableIpMasking = true
 param appInsightsPublicNetworkAccessForIngestion = 'Enabled'
 param appInsightsPublicNetworkAccessForQuery = 'Enabled'

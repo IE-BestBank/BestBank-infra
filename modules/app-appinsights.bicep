@@ -12,8 +12,8 @@ param name string
 ])
 param applicationType string = 'web'
 
-@description('Required. Resource ID of the log analytics workspace which the data will be ingested to. This property is required to create an application with this API version. Applications from older versions will not have this property.')
-param workspaceResourceId string
+@description('Required. Resource ID of the Log Analytics workspace which the data will be ingested to.')
+param workspaceResourceId string = ''
 
 @description('Optional. Disable IP masking. Default value is set to true.')
 param disableIpMasking bool = true //allows you to track IP address of users 
@@ -74,9 +74,9 @@ resource appInsights 'Microsoft.Insights/components@2020-02-02' = {
   name: name
   location: location
   tags: tags
+  kind: applicationType 
   properties: {
     Application_Type: applicationType
-    kind: applicationType 
     DisableIpMasking: disableIpMasking
     WorkspaceResourceId: workspaceResourceId
     publicNetworkAccessForIngestion: publicNetworkAccessForIngestion
