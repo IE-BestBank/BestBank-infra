@@ -36,3 +36,7 @@ param appInsightsPublicNetworkAccessForIngestion = 'Enabled'
 param appInsightsPublicNetworkAccessForQuery = 'Enabled'
 param appInsightsRetentionInDays = 365
 param appInsightsSamplingPercentage = 100
+
+//container-registry
+param containerRegistryName = 'bestbank-container-registry-dev'
+

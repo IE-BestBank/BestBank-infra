@@ -216,3 +216,14 @@ module appInsights 'modules/app-appinsights.bicep' = {
   }
 }
 
+@sys.description('The Container Registry name')
+param containerRegistryName string
+
+module containerRegistry 'modules/container-registry.bicep' = {
+  name: 'containerRegistry-${userAlias}'
+  params: {
+    name: containerRegistryName
+    location: location
+  }
+}
+
