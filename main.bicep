@@ -43,6 +43,13 @@ param appServiceAPIDBHostDBUSER string
 param appServiceAPIDBHostFLASK_APP string
 @sys.description('The value for the environment variable FLASK_DEBUG')
 param appServiceAPIDBHostFLASK_DEBUG string
+//NEW VARS:
+@sys.description('The default admin password for the app')
+@secure()
+param appServiceAPIEnvVarDEFAULT_ADMIN_PASSWORD string
+@sys.description('The default admin username for the app')
+param appServiceAPIEnvVarDEFAULT_ADMIN_USERNAME string
+
 
 //log analytics 
 @sys.description('Name of the Log Analytics workspace')
@@ -67,8 +74,6 @@ param appInsightsName string
 ])
 param appInsightsApplicationType string = 'web'
 
-// @description('Required. Resource ID of the Log Analytics workspace which the data will be ingested to.')
-// param workspaceResourceId string = ''
 
 @sys.description('Disable IP masking for Application Insights')
 param appInsightsDisableIpMasking bool = true
@@ -166,11 +171,14 @@ module appService 'modules/app-service.bicep' = {
     appServiceAPIEnvVarDBNAME: appServiceAPIEnvVarDBNAME
     appServiceAPIEnvVarDBPASS: appServiceAPIEnvVarDBPASS
     appServiceAPIEnvVarENV: appServiceAPIEnvVarENV
+    appServiceAPIEnvVarDEFAULT_ADMIN_PASSWORD: appServiceAPIEnvVarDEFAULT_ADMIN_PASSWORD
+    appServiceAPIEnvVarDEFAULT_ADMIN_USERNAME: appServiceAPIEnvVarDEFAULT_ADMIN_USERNAME
   }
   dependsOn: [
     postgresSQLDatabase
   ]
 }
+
 
 output appServiceAppHostName string = appService.outputs.appServiceAppHostName
 
