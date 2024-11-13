@@ -1,5 +1,6 @@
 using '../main.bicep'
 
+//app-service
 param environmentType = 'nonprod'
 param postgreSQLServerName = 'bestbank-dbsrv-dev'
 param postgreSQLDatabaseName = 'bestbank-db-dev'
@@ -16,13 +17,19 @@ param appServiceAPIEnvVarDBNAME =  'bestbank-db-dev'
 param appServiceAPIEnvVarENV =  'dev'
 
 
-
-param logAnalyticsWorkspaceName = 'bestbank-log-dev'
+// log analytics 
+param logAnalyticsWorkspaceName = 'BestBank-log-dev'
 param logAnalyticsSkuName = 'PerGB2018'  
 param logAnalyticsDataRetention = 30  
 param publicNetworkAccessForIngestion = 'Enabled'
 param publicNetworkAccessForQuery = 'Enabled'
 
 
-
-
+// Application Insights
+param appInsightsName = 'bestbank-appinsights-dev'
+param appInsightsApplicationType = 'web'
+param appInsightsDisableIpMasking = true
+param appInsightsPublicNetworkAccessForIngestion = 'Enabled'
+param appInsightsPublicNetworkAccessForQuery = 'Enabled'
+param appInsightsRetentionInDays = 365
+param appInsightsSamplingPercentage = 100
