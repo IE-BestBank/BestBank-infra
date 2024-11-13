@@ -13,7 +13,7 @@ param appServiceAPIDBHostFLASK_DEBUG string
 //new vars
 @secure()
 param appServiceAPIEnvVarDEFAULT_ADMIN_PASSWORD string
-param appServiceAPIEnvVarDEFAULT_ADMIN_USER string
+param appServiceAPIEnvVarDEFAULT_ADMIN_USERNAME string
 
 @allowed([
   'nonprod'
@@ -84,7 +84,7 @@ resource appServiceAPIApp 'Microsoft.Web/sites@2022-03-01' = {
         }
         {
           name: 'DEFAULT_ADMIN_USER'
-          value: appServiceAPIEnvVarDEFAULT_ADMIN_USER
+          value: appServiceAPIEnvVarDEFAULT_ADMIN_USERNAME
         }
       ]
     }

@@ -16,7 +16,7 @@ param appServiceAPIEnvVarDBHOST =  'bestbank-dbsrv-uat.postgres.database.azure.c
 param appServiceAPIEnvVarDBNAME =  'bestbank-db-uat'
 param appServiceAPIEnvVarENV =  'uat'
 param appServiceAPIEnvVarDEFAULT_ADMIN_PASSWORD = 'BestBankPASS' 
-param appServiceAPIEnvVarDEFAULT_ADMIN_USER = 'BestBankUSER' 
+param appServiceAPIEnvVarDEFAULT_ADMIN_USERNAME = 'BestBankUSER' 
 
 //log analytics 
 param logAnalyticsWorkspaceName = 'bestbank-log-uat'

@@ -48,7 +48,7 @@ param appServiceAPIDBHostFLASK_DEBUG string
 @secure()
 param appServiceAPIEnvVarDEFAULT_ADMIN_PASSWORD string
 @sys.description('The default admin username for the app')
-param appServiceAPIEnvVarDEFAULT_ADMIN_USER string
+param appServiceAPIEnvVarDEFAULT_ADMIN_USERNAME string
 
 
 //log analytics 
@@ -172,7 +172,7 @@ module appService 'modules/app-service.bicep' = {
     appServiceAPIEnvVarDBPASS: appServiceAPIEnvVarDBPASS
     appServiceAPIEnvVarENV: appServiceAPIEnvVarENV
     appServiceAPIEnvVarDEFAULT_ADMIN_PASSWORD: appServiceAPIEnvVarDEFAULT_ADMIN_PASSWORD
-    appServiceAPIEnvVarDEFAULT_ADMIN_USER: appServiceAPIEnvVarDEFAULT_ADMIN_USER
+    appServiceAPIEnvVarDEFAULT_ADMIN_USERNAME: appServiceAPIEnvVarDEFAULT_ADMIN_USERNAME
   }
   dependsOn: [
     postgresSQLDatabase
