@@ -15,6 +15,8 @@ param appServiceAPIEnvVarDBPASS =  'github-secret-replaced-in-workflow'
 param appServiceAPIEnvVarDBHOST =  'bestbank-dbsrv-uat.postgres.database.azure.com'
 param appServiceAPIEnvVarDBNAME =  'bestbank-db-uat'
 param appServiceAPIEnvVarENV =  'uat'
+param appServiceAPIEnvVarDEFAULT_ADMIN_PASSWORD = 'BestBankPASS' 
+param appServiceAPIEnvVarDEFAULT_ADMIN_USER = 'BestBankUSER' 
 
 //log analytics 
 param logAnalyticsWorkspaceName = 'bestbank-log-uat'

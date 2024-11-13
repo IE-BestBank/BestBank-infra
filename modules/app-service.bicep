@@ -10,6 +10,11 @@ param appServiceAPIEnvVarDBPASS string
 param appServiceAPIDBHostDBUSER string
 param appServiceAPIDBHostFLASK_APP string
 param appServiceAPIDBHostFLASK_DEBUG string
+//new vars
+@secure()
+param appServiceAPIEnvVarDEFAULT_ADMIN_PASSWORD string
+param appServiceAPIEnvVarDEFAULT_ADMIN_USER string
+
 @allowed([
   'nonprod'
   'prod'
@@ -73,10 +78,19 @@ resource appServiceAPIApp 'Microsoft.Web/sites@2022-03-01' = {
           name: 'SCM_DO_BUILD_DURING_DEPLOYMENT'
           value: 'true'
         }
+        {
+          name: 'DEFAULT_ADMIN_PASSWORD'
+          value: appServiceAPIEnvVarDEFAULT_ADMIN_PASSWORD
+        }
+        {
+          name: 'DEFAULT_ADMIN_USER'
+          value: appServiceAPIEnvVarDEFAULT_ADMIN_USER
+        }
       ]
     }
   }
 }
+
 
 resource appServiceApp 'Microsoft.Web/sites@2022-03-01' = {
   name: appServiceAppName
