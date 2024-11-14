@@ -66,32 +66,26 @@ param publicNetworkAccessForQuery string
 //application insights parameters
 @sys.description('The name of the Application Insights instance')
 param appInsightsName string
-
 @sys.description('Application type for Application Insights')
 @allowed([
   'web'
   'other'
 ])
 param appInsightsApplicationType string = 'web'
-
-
 @sys.description('Disable IP masking for Application Insights')
 param appInsightsDisableIpMasking bool = true
-
 @sys.description('The network access type for ingestion in Application Insights')
 @allowed([
   'Enabled'
   'Disabled'
 ])
 param appInsightsPublicNetworkAccessForIngestion string = 'Enabled'
-
 @sys.description('The network access type for querying in Application Insights')
 @allowed([
   'Enabled'
   'Disabled'
 ])
 param appInsightsPublicNetworkAccessForQuery string = 'Enabled'
-
 @sys.description('Retention period in days for Application Insights data')
 @allowed([
   30
@@ -105,7 +99,6 @@ param appInsightsPublicNetworkAccessForQuery string = 'Enabled'
   730
 ])
 param appInsightsRetentionInDays int = 365
-
 @sys.description('Sampling percentage for Application Insights telemetry')
 @minValue(0)
 @maxValue(100)
