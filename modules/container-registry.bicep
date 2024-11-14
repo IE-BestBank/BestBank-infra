@@ -11,6 +11,6 @@ adminUserEnabled: true
 }
 }
 //requires vey vault:
-// output containerRegistryUserName string = containerRegistry.listCredentials().username
-// output containerRegistryPassword0 string = containerRegistry.listCredentials().passwords[0].value
-// output containerRegistryPassword1 string = containerRegistry.listCredentials().passwords[1].value
+output containerRegistryUserName string = containerRegistry.listCredentials().username
+output containerRegistryPassword0 string = containerRegistry.listCredentials().passwords[0].value
+output containerRegistryPassword1 string = containerRegistry.listCredentials().passwords[1].value
