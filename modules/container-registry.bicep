@@ -11,6 +11,9 @@ adminUserEnabled: true
 }
 }
 //requires vey vault:
+#disable-next-line outputs-should-not-contain-secrets // Doesn't contain a password
 output containerRegistryUserName string = containerRegistry.listCredentials().username
+#disable-next-line outputs-should-not-contain-secrets // Doesn't contain a password
 output containerRegistryPassword0 string = containerRegistry.listCredentials().passwords[0].value
+#disable-next-line outputs-should-not-contain-secrets // Doesn't contain a password
 output containerRegistryPassword1 string = containerRegistry.listCredentials().passwords[1].value
