@@ -26,7 +26,7 @@ param environmentType string
 
 // Backend App Service Plan SKU
 var appServicePlanBEKind = 'linux'
-var appServicePlanBESku = (environmentType == 'prod') ? 'B1' : 'B1'
+var appServicePlanBESku = (environmentType == 'nonprod') ? 'B1' : 'B1'
 
 // Backend App Service Plan
 resource appServicePlanBE 'Microsoft.Web/serverFarms@2022-03-01' = {
@@ -102,6 +102,9 @@ resource appServiceAPIApp 'Microsoft.Web/sites@2022-03-01' = {
 resource staticWebApp 'Microsoft.Web/staticSites@2022-03-01' = {
   name: staticWebAppName
   location: location
+  sku: {
+    name: 'Free' 
+  }
   properties: {
     buildProperties: {
       appLocation: 'BestBank-fe' // Path to frontend app code 
