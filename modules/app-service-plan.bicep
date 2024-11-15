@@ -113,4 +113,4 @@ resource staticWebApp 'Microsoft.Web/staticSites@2022-03-01' = {
 // Outputs
 output backendAppServicePlanId string = appServicePlanBE.id
 output backendAppServiceHostName string = appServiceAPIApp.properties.defaultHostName
-output frontendStaticWebAppHostName string = staticWebApp.properties.defaultHostName
+output frontendStaticWebAppHostName string = staticWebApp.properties.defaultHostname
