@@ -1,22 +1,21 @@
 using '../main.bicep'
 
-//app-service
-param environmentType = 'nonprod'
-param postgreSQLServerName = 'bestbank-dbsrv-dev'
-param postgreSQLDatabaseName = 'bestbank-db-dev'
-param appServicePlanName = 'bestbank-asp-dev'
+// App Service (Backend)
+param appServicePlanNameBE = 'bestbank-asp-be-dev'
 param appServiceAPIAppName = 'bestbank-be-dev'
-param appServiceAppName = 'bestbank-fe-dev'
-param location = 'North Europe'
-param appServiceAPIDBHostFLASK_APP =  'iebank_api\\__init__.py'
-param appServiceAPIDBHostFLASK_DEBUG =  '1'
+param appServiceAPIEnvVarENV = 'dev'
+param appServiceAPIEnvVarDBHOST = 'bestbank-dbsrv-dev.postgres.database.azure.com'
+param appServiceAPIEnvVarDBNAME = 'bestbank-db-dev'
+param appServiceAPIEnvVarDBPASS = 'github-secret-replaced-in-workflow'
 param appServiceAPIDBHostDBUSER = 'github-secret-replaced-in-workflow'
-param appServiceAPIEnvVarDBPASS =  'github-secret-replaced-in-workflow'
-param appServiceAPIEnvVarDBHOST =  'bestbank-dbsrv-dev.postgres.database.azure.com'
-param appServiceAPIEnvVarDBNAME =  'bestbank-db-dev'
-param appServiceAPIEnvVarENV =  'dev'
-param appServiceAPIEnvVarDEFAULT_ADMIN_PASSWORD = 'BestBankPASS' 
-param appServiceAPIEnvVarDEFAULT_ADMIN_USERNAME = 'BestBankUSER' 
+// param appServiceAPIDBHostFLASK_APP = 'iebank_api\\__init__.py'
+// param appServiceAPIDBHostFLASK_DEBUG = '1'
+param appServiceAPIEnvVarDEFAULT_ADMIN_PASSWORD = 'BestBankPASS'
+param appServiceAPIEnvVarDEFAULT_ADMIN_USERNAME = 'BestBankUSER'
+
+// Static Web App (Frontend)
+param staticWebAppName = 'bestbank-fe-dev'
+
 
 
 
@@ -40,3 +39,12 @@ param appInsightsSamplingPercentage = 100
 //container-registry
 param containerRegistryName = 'bestbankContRegistryDev'
 
+// app-service-plan-be (container)
+// param appServicePlanName = 'bestbank-asp-dev' // Name for the backend App Service Plan
+// param location = 'North Europe' // Region where resources will be deployed
+
+// @allowed([
+//   'B1'
+//   'F1'
+// ])
+// param skuName = 'B1' // SKU for the App Service Plan (B1: Basic, F1: Free)

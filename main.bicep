@@ -4,30 +4,28 @@
   'prod'
 ])
 param environmentType string = 'nonprod'
+
 @sys.description('The user alias to add to the deployment name')
 param userAlias string = 'bestbank'
+
 @sys.description('The PostgreSQL Server name')
 @minLength(3)
 @maxLength(24)
 param postgreSQLServerName string = 'ie-bank-db-server-dev'
+
 @sys.description('The PostgreSQL Database name')
 @minLength(3)
 @maxLength(24)
 param postgreSQLDatabaseName string = 'ie-bank-db'
-@sys.description('The App Service Plan name')
-@minLength(3)
-@maxLength(24)
-param appServicePlanName string = 'ie-bank-app-sp-dev'
-@sys.description('The Web App name (frontend)')
-@minLength(3)
-@maxLength(24)
-param appServiceAppName string = 'ie-bank-dev'
-@sys.description('The API App name (backend)')
-@minLength(3)
-@maxLength(24)
-param appServiceAPIAppName string = 'ie-bank-api-dev'
+
 @sys.description('The Azure location where the resources will be deployed')
 param location string = resourceGroup().location
+
+// App Service (Backend) Parameters
+@sys.description('The App Service Plan name for the backend')
+param appServicePlanNameBE string = 'bestbank-asp-be-dev'
+@sys.description('The API App name (frontend)')
+param appServiceAPIAppName string = 'bestbank-be-dev'
 @sys.description('The value for the environment variable ENV')
 param appServiceAPIEnvVarENV string
 @sys.description('The value for the environment variable DBHOST')
@@ -39,19 +37,17 @@ param appServiceAPIEnvVarDBNAME string
 param appServiceAPIEnvVarDBPASS string
 @sys.description('The value for the environment variable DBUSER')
 param appServiceAPIDBHostDBUSER string
-@sys.description('The value for the environment variable FLASK_APP')
-param appServiceAPIDBHostFLASK_APP string
-@sys.description('The value for the environment variable FLASK_DEBUG')
-param appServiceAPIDBHostFLASK_DEBUG string
-//NEW VARS:
 @sys.description('The default admin password for the app')
 @secure()
 param appServiceAPIEnvVarDEFAULT_ADMIN_PASSWORD string
 @sys.description('The default admin username for the app')
 param appServiceAPIEnvVarDEFAULT_ADMIN_USERNAME string
 
+// Static Web App (Frontend) Parameters
+@sys.description('The Web App name (frontend)')
+param staticWebAppName string = 'bestbank-fe-dev'
 
-//log analytics 
+// Log Analytics Parameters
 @sys.description('Name of the Log Analytics workspace')
 param logAnalyticsWorkspaceName string
 @sys.description('SKU for the Log Analytics workspace')
@@ -63,7 +59,7 @@ param publicNetworkAccessForIngestion string
 @sys.description('The network access type for querying')
 param publicNetworkAccessForQuery string
 
-//application insights parameters
+// Application Insights Parameters
 @sys.description('The name of the Application Insights instance')
 param appInsightsName string
 @sys.description('Application type for Application Insights')
@@ -104,8 +100,11 @@ param appInsightsRetentionInDays int = 365
 @maxValue(100)
 param appInsightsSamplingPercentage int = 100
 
+// Container Registry Parameters
+@sys.description('The Container Registry name')
+param containerRegistryName string
 
-
+// PostgreSQL Server Resource
 resource postgresSQLServer 'Microsoft.DBforPostgreSQL/flexibleServers@2022-12-01' = {
   name: postgreSQLServerName
   location: location
@@ -140,6 +139,7 @@ resource postgresSQLServer 'Microsoft.DBforPostgreSQL/flexibleServers@2022-12-01
   }
 }
 
+// PostgreSQL Database Resource
 resource postgresSQLDatabase 'Microsoft.DBforPostgreSQL/flexibleServers/databases@2022-12-01' = {
   name: postgreSQLDatabaseName
   parent: postgresSQLServer
@@ -149,32 +149,38 @@ resource postgresSQLDatabase 'Microsoft.DBforPostgreSQL/flexibleServers/database
   }
 }
 
-module appService 'modules/app-service.bicep' = {
-  name: 'appService-${userAlias}'
+// Container Registry Module
+module containerRegistry 'modules/container-registry.bicep' = {
+  name: 'containerRegistry-${userAlias}'
+  params: {
+    name: containerRegistryName
+    location: location
+  }
+}
+
+// App Service Plan Module for Backend (Containerized) and Frontend (Static Web App)
+module appServicePlan 'modules/app-service-plan.bicep' = {
+  name: 'appServicePlan-${userAlias}'
   params: {
     location: location
     environmentType: environmentType
-    appServiceAppName: appServiceAppName
+    appServicePlanBEName: appServicePlanNameBE
     appServiceAPIAppName: appServiceAPIAppName
-    appServicePlanName: appServicePlanName
-    appServiceAPIDBHostDBUSER: appServiceAPIDBHostDBUSER
-    appServiceAPIDBHostFLASK_APP: appServiceAPIDBHostFLASK_APP
-    appServiceAPIDBHostFLASK_DEBUG: appServiceAPIDBHostFLASK_DEBUG
+    appServiceAPIEnvVarENV: appServiceAPIEnvVarENV
     appServiceAPIEnvVarDBHOST: appServiceAPIEnvVarDBHOST
     appServiceAPIEnvVarDBNAME: appServiceAPIEnvVarDBNAME
     appServiceAPIEnvVarDBPASS: appServiceAPIEnvVarDBPASS
-    appServiceAPIEnvVarENV: appServiceAPIEnvVarENV
+    appServiceAPIDBHostDBUSER: appServiceAPIDBHostDBUSER
     appServiceAPIEnvVarDEFAULT_ADMIN_PASSWORD: appServiceAPIEnvVarDEFAULT_ADMIN_PASSWORD
     appServiceAPIEnvVarDEFAULT_ADMIN_USERNAME: appServiceAPIEnvVarDEFAULT_ADMIN_USERNAME
+    staticWebAppName: staticWebAppName
   }
   dependsOn: [
     postgresSQLDatabase
   ]
 }
 
-
-output appServiceAppHostName string = appService.outputs.appServiceAppHostName
-
+// Log Analytics Module
 module logAnalytics 'modules/app-log.bicep' = {
   name: 'logAnalyticsWorkspaceDeployment'
   params: {
@@ -190,13 +196,13 @@ module logAnalytics 'modules/app-log.bicep' = {
   }
 }
 
-
+// Application Insights Module
 module appInsights 'modules/app-appinsights.bicep' = {
   name: 'appInsights-${userAlias}'
   params: {
     name: appInsightsName
     applicationType: appInsightsApplicationType
-    workspaceResourceId: logAnalytics.outputs.logAnalyticsWorkspaceId // Dynamically set here
+    workspaceResourceId: logAnalytics.outputs.logAnalyticsWorkspaceId
     disableIpMasking: appInsightsDisableIpMasking
     publicNetworkAccessForIngestion: appInsightsPublicNetworkAccessForIngestion
     publicNetworkAccessForQuery: appInsightsPublicNetworkAccessForQuery
@@ -209,14 +215,7 @@ module appInsights 'modules/app-appinsights.bicep' = {
   }
 }
 
-@sys.description('The Container Registry name')
-param containerRegistryName string
-
-module containerRegistry 'modules/container-registry.bicep' = {
-  name: 'containerRegistry-${userAlias}'
-  params: {
-    name: containerRegistryName
-    location: location
-  }
-}
-
+// Outputs
+output backendAppServicePlanId string = appServicePlan.outputs.backendAppServicePlanId
+output backendAppServiceHostName string = appServicePlan.outputs.backendAppServiceHostName
+output frontendStaticWebAppHostName string = appServicePlan.outputs.frontendStaticWebAppHostName
