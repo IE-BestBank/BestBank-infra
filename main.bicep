@@ -215,7 +215,7 @@ module appInsights 'modules/app-appinsights.bicep' = {
   }
 }
 
-// Outputs
+// Outputs:
 output backendAppServicePlanId string = appServicePlan.outputs.backendAppServicePlanId
 output backendAppServiceHostName string = appServicePlan.outputs.backendAppServiceHostName
 output frontendStaticWebAppHostName string = appServicePlan.outputs.frontendStaticWebAppHostName
