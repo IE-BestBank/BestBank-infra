@@ -23,7 +23,7 @@ param location string = resourceGroup().location
 
 // App Service (Backend) Parameters
 @sys.description('The App Service Plan name for the backend')
-param appServicePlanNameBE string = 'bestbank-asp-be-dev'
+param appServicePlanBEName string = 'bestbank-asp-be-dev'
 @sys.description('The API App name (frontend)')
 param appServiceAPIAppName string = 'bestbank-be-dev'
 @sys.description('The value for the environment variable ENV')
@@ -164,7 +164,7 @@ module appServicePlan 'modules/app-service-plan.bicep' = {
   params: {
     location: location
     environmentType: environmentType
-    appServicePlanBEName: appServicePlanNameBE
+    appServicePlanBEName: appServicePlanBEName
     appServiceAPIAppName: appServiceAPIAppName
     appServiceAPIEnvVarENV: appServiceAPIEnvVarENV
     appServiceAPIEnvVarDBHOST: appServiceAPIEnvVarDBHOST

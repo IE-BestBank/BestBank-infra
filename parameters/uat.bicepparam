@@ -1,21 +1,18 @@
 using '../main.bicep'
 
 // App Service (Backend)
-param appServicePlanNameBE = 'bestbank-asp-be-uat'
+param appServicePlanBEName = 'bestbank-asp-be-uat'
 param appServiceAPIAppName = 'bestbank-be-uat'
 param appServiceAPIEnvVarENV = 'uat'
 param appServiceAPIEnvVarDBHOST = 'bestbank-dbsrv-uat.postgres.database.azure.com'
 param appServiceAPIEnvVarDBNAME = 'bestbank-db-uat'
 param appServiceAPIEnvVarDBPASS = 'github-secret-replaced-in-workflow'
 param appServiceAPIDBHostDBUSER = 'github-secret-replaced-in-workflow'
-// param appServiceAPIDBHostFLASK_APP = 'iebank_api\\__init__.py'
-// param appServiceAPIDBHostFLASK_DEBUG = '1'
 param appServiceAPIEnvVarDEFAULT_ADMIN_PASSWORD = 'BestBankPASS'
 param appServiceAPIEnvVarDEFAULT_ADMIN_USERNAME = 'BestBankUSER'
 
 // Static Web App (Frontend)
 param staticWebAppName = 'bestbank-fe-uat'
-
 
 //log analytics 
 param logAnalyticsWorkspaceName = 'bestbank-log-uat'
@@ -36,5 +33,5 @@ param appInsightsSamplingPercentage = 100
 //container registry 
 param containerRegistryName = 'bestbankContRegistryUat'
 
-// app-service-plan-be (container)
+
 
