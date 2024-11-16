@@ -112,8 +112,16 @@ module appInsights 'modules/app-appinsights.bicep' = {
     location: location
     tags: {
       Environment: environmentType
+      Owner: userAlias
+      Application: 'BestBank'
     }
   }
 }
+// Outputs for Application Insights
+output appInsightsName string = appInsights.outputs.name
+output appInsightsResourceId string = appInsights.outputs.resourceId
+output appInsightsApplicationId string = appInsights.outputs.applicationId
+output appInsightsInstrumentationKey string = appInsights.outputs.instrumentationKey
+output appInsightsConnectionString string = appInsights.outputs.connectionString
 
 
