@@ -4,20 +4,16 @@
   'prod'
 ])
 param environmentType string = 'nonprod'
-
 @sys.description('The user alias to add to the deployment name')
 param userAlias string = 'bestbank'
-
 @sys.description('The PostgreSQL Server name')
 @minLength(3)
 @maxLength(24)
 param postgreSQLServerName string = 'ie-bank-db-server-dev'
-
 @sys.description('The PostgreSQL Database name')
 @minLength(3)
 @maxLength(24)
 param postgreSQLDatabaseName string = 'ie-bank-db'
-
 @sys.description('The Azure location where the resources will be deployed')
 param location string = resourceGroup().location
 
@@ -103,6 +99,23 @@ param appInsightsSamplingPercentage int = 100
 // Container Registry Parameters
 @sys.description('The Container Registry name')
 param containerRegistryName string
+
+// //step 1 - deploy ACR
+// param location string = resourceGroup().location
+// param containerRegistryName string
+// module container_registry './modules/container-registry.bicep' = {
+//   name: 'acr-${containerRegistryName}'
+//   params: {
+//     location: location
+//     containerRegistryName: containerRegistryName
+//   }
+// }
+// output acrLoginServer string = container_registry.outputs.acrLoginServer
+// output acrAdminUsername string = container_registry.outputs.acrAdminUsername
+// output acrAdminPassword string = container_registry.outputs.acrAdminPassword
+
+
+
 
 // PostgreSQL Server Resource
 resource postgresSQLServer 'Microsoft.DBforPostgreSQL/flexibleServers@2022-12-01' = {
@@ -219,3 +232,24 @@ module appInsights 'modules/app-appinsights.bicep' = {
 output backendAppServicePlanId string = appServicePlan.outputs.backendAppServicePlanId
 output backendAppServiceHostName string = appServicePlan.outputs.backendAppServiceHostName
 output frontendStaticWebAppHostName string = appServicePlan.outputs.frontendStaticWebAppHostName
+
+
+// //key-vault
+// module keyVaultModule 'key-vault.bicep' = {
+//   name: 'keyVaultDeployment'
+//   params: {
+//     name: 'keyVault-${userAlias}'
+//     location: location
+//     roleAssignments: [
+//       {
+//         principalId: '<AppServiceManagedIdentityPrincipalId>'
+//         roleDefinitionIdOrName: 'Key Vault Secrets User'
+//       }
+//       {
+//         principalId: '<YourUserPrincipalId>'
+//         roleDefinitionIdOrName: 'Key Vault Administrator'
+//       }
+//     ]
+//   }
+// }
+
