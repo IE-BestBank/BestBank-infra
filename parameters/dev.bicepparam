@@ -3,14 +3,35 @@ using '../main.bicep'
 //1- azure container-registry
 param containerRegistryName = 'bestbankContRegistryDev'
 
-//2- log analytics 
+//2-Key Vault parameters
+param keyVaultName = 'keyVault-bestbank-dev'
+param enableRbacAuthorization = true
+param enableVaultForDeployment = true
+param enableVaultForTemplateDeployment = true
+param enableSoftDelete = true
+param roleAssignments = [ ] //need to add later
+
+//3- DB & Server 
+// PostgreSQL parameters (aligning with app service)
+param postgreSQLServerName = 'bestbank-dbsrv-dev' // DBHOST
+param postgreSQLAdminUsername = 'github-secret-replaced-in-workflow' // DBUSER
+param postgreSQLAdminPassword = 'github-secret-replaced-in-workflow' // DBPASS
+param postgreSQLDatabaseName = 'bestbank-db-dev' // DBNAME
+param postgreSQLSkuName = 'Standard_B1ms'
+param postgreSQLBackupRetentionDays = 7
+param postgreSQLGeoRedundantBackup = 'Disabled'
+param postgreSQLStorageSizeGb = 32
+
+
+
+//4- log analytics 
 param logAnalyticsWorkspaceName = 'BestBank-log-dev'
 param logAnalyticsSkuName = 'PerGB2018'  
 param logAnalyticsDataRetention = 30  
 param publicNetworkAccessForIngestion = 'Enabled'
 param publicNetworkAccessForQuery = 'Enabled'
 
-//3- Application Insights
+//5- Application Insights
 param appInsightsName = 'bestbank-appinsights-dev'
 param appInsightsApplicationType = 'web'
 param appInsightsDisableIpMasking = true
@@ -19,31 +40,21 @@ param appInsightsPublicNetworkAccessForQuery = 'Enabled'
 param appInsightsRetentionInDays = 365
 param appInsightsSamplingPercentage = 100
 
+//6- ASP 
+// App Service Plan parameters for the dev environment
+param appServicePlanName = 'bestbank-asp-be-dev' // Unique name for the App Service Plan
+param appServicePlanSku = 'B1' // Pricing tier (e.g., F1 for free, B1 for basic)
 
-// // App Service plan(Backend)
-// param appServicePlanBEName = 'bestbank-asp-be-dev'
-// param appServiceAPIAppName = 'bestbank-be-dev'
-// param appServiceAPIEnvVarENV = 'dev'
-// param appServiceAPIEnvVarDBHOST = 'bestbank-dbsrv-dev.postgres.database.azure.com'
-// param appServiceAPIEnvVarDBNAME = 'bestbank-db-dev'
-// param appServiceAPIEnvVarDBPASS = 'github-secret-replaced-in-workflow'
-// param appServiceAPIDBHostDBUSER = 'github-secret-replaced-in-workflow'
-// param appServiceAPIEnvVarDEFAULT_ADMIN_PASSWORD = 'BestBankPASS'
-// param appServiceAPIEnvVarDEFAULT_ADMIN_USERNAME = 'BestBankUSER'
+//7- app service - containerized be 
+// App Service Backend Parameters for Dev
+param appServiceBackendName = 'bestbank-be-dev' // Name of the backend App Service
+param backendDockerImageName = 'bestbank-backend' // Docker image name
+param backendDockerImageVersion = 'latest' // Docker image version
+param backendAppSettings = [
+  { name: 'ENV', value: 'dev' }
+  { name: 'DBHOST', value: 'bestbank-dbsrv-dev.postgres.database.azure.com' } // PostgreSQL FQDN
+  { name: 'DBNAME', value: 'bestbank-db-dev' } // Database name
+  { name: 'DBUSER', value: 'iebankdbadmin' } // Database user
+  { name: 'DEFAULT_ADMIN_USERNAME', value: 'BestBankUSER' } // Admin username
+]
 
-// // Static Web App (Frontend)
-// param staticWebAppName = 'bestbank-fe-dev'
-
-
-// //key vault 
-// param keyVaultName = 'keyVault-bestbank-dev'
-// param keyVaultRoleAssignments = [
-//   {
-//     principalId: '<AppServiceManagedIdentityPrincipalId>' // Replace with the actual managed identity's principal ID
-//     roleDefinitionIdOrName: 'Key Vault Secrets User'
-//   }
-//   {
-//     principalId: '<YourUserPrincipalId>' // Replace with your Azure AD User Principal ID
-//     roleDefinitionIdOrName: 'Key Vault Administrator'
-//   }
-// ]

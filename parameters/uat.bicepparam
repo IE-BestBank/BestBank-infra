@@ -3,14 +3,34 @@ using '../main.bicep'
 //1 - azure container-registry
 param containerRegistryName = 'bestbankContRegistryUat'
 
-//2- log analytics 
+//2-Key Vault parameters
+param keyVaultName = 'keyVault-bestbank-uat'
+param enableRbacAuthorization = true
+param enableVaultForDeployment = true
+param enableVaultForTemplateDeployment = true
+param enableSoftDelete = true
+param roleAssignments = [ ] //need to add later 
+
+// 3- DB and server 
+// PostgreSQL parameters (aligning with app service)
+param postgreSQLServerName = 'bestbank-dbsrv-uat' // DBHOST
+param postgreSQLAdminUsername = 'github-secret-replaced-in-workflow' // DBUSER
+param postgreSQLAdminPassword = 'github-secret-replaced-in-workflow' // DBPASS
+param postgreSQLDatabaseName = 'bestbank-db-uat' // DBNAME
+param postgreSQLSkuName = 'Standard_B1ms'
+param postgreSQLBackupRetentionDays = 7
+param postgreSQLGeoRedundantBackup = 'Disabled'
+param postgreSQLStorageSizeGb = 32
+
+
+//4- log analytics 
 param logAnalyticsWorkspaceName = 'bestbank-log-uat'
 param logAnalyticsSkuName = 'PerGB2018'  
 param logAnalyticsDataRetention = 30  
 param publicNetworkAccessForIngestion = 'Enabled'
 param publicNetworkAccessForQuery = 'Enabled'
 
-//3- application insights 
+//5- application insights 
 param appInsightsName = 'bestbank-appinsights-uat'
 param appInsightsApplicationType = 'web'
 param appInsightsDisableIpMasking = true
@@ -19,20 +39,24 @@ param appInsightsPublicNetworkAccessForQuery = 'Enabled'
 param appInsightsRetentionInDays = 365
 param appInsightsSamplingPercentage = 100
 
-// // App Service (Backend)
-// param appServicePlanBEName = 'bestbank-asp-be-uat'
-// param appServiceAPIAppName = 'bestbank-be-uat'
-// param appServiceAPIEnvVarENV = 'uat'
-// param appServiceAPIEnvVarDBHOST = 'bestbank-dbsrv-uat.postgres.database.azure.com'
-// param appServiceAPIEnvVarDBNAME = 'bestbank-db-uat'
-// param appServiceAPIEnvVarDBPASS = 'github-secret-replaced-in-workflow'
-// param appServiceAPIDBHostDBUSER = 'github-secret-replaced-in-workflow'
-// param appServiceAPIEnvVarDEFAULT_ADMIN_PASSWORD = 'BestBankPASS'
-// param appServiceAPIEnvVarDEFAULT_ADMIN_USERNAME = 'BestBankUSER'
+//6- asp 
+// App Service Plan Parameters for uat
+param appServicePlanName = 'bestbank-asp-be-uat' // Unique name for the App Service Plan
+param appServicePlanSku = 'B1' // Pricing tier (e.g., F1 for free, B1 for basic)
 
-// // Static Web App (Frontend)
-// param staticWebAppName = 'bestbank-fe-uat'
 
+//7- app service - containerized be 
+// App Service Backend Parameters for uat
+param appServiceBackendName = 'bestbank-be-uat' // Name of the backend App Service
+param backendDockerImageName = 'bestbank-backend' // Docker image name
+param backendDockerImageVersion = 'latest' // Docker image version
+param backendAppSettings = [
+  { name: 'ENV', value: 'uat' }
+  { name: 'DBHOST', value: 'bestbank-dbsrv-uat.postgres.database.azure.com' } // PostgreSQL FQDN
+  { name: 'DBNAME', value: 'bestbank-db-uat' } // Database name
+  { name: 'DBUSER', value: 'iebankdbadmin' } // Database user
+  { name: 'DEFAULT_ADMIN_USERNAME', value: 'BestBankUSER' } // Admin username
+]
 
 
 

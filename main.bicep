@@ -23,8 +23,87 @@ output acrAdminPassword0 string = containerRegistry.outputs.containerRegistryPas
 #disable-next-line outputs-should-not-contain-secrets
 output acrAdminPassword1 string = containerRegistry.outputs.containerRegistryPassword1
 
+// step 2- deploy KeyVault with RBAC 
+@sys.description('The name of the Key Vault')
+param keyVaultName string
+@sys.description('Enable RBAC authorization for Key Vault')
+param enableRbacAuthorization bool
+@sys.description('Specifies if the vault is enabled for deployment by script or compute')
+param enableVaultForDeployment bool
+@sys.description('Specifies if the vault is enabled for a template deployment')
+param enableVaultForTemplateDeployment bool
+@sys.description('Enable Key Vault\'s soft delete feature')
+param enableSoftDelete bool
+@sys.description('Array of role assignments to create for the Key Vault')
+param roleAssignments array
 
-//step 2 - deploy LAW
+module keyVault 'modules/key-vault.bicep' = {
+  name: 'keyVault-${userAlias}'
+  params: {
+    name: keyVaultName
+    enableRbacAuthorization: enableRbacAuthorization
+    enableVaultForDeployment: enableVaultForDeployment
+    enableVaultForTemplateDeployment: enableVaultForTemplateDeployment
+    enableSoftDelete: enableSoftDelete
+    location: location
+    roleAssignments: roleAssignments
+  }
+}
+// Outputs for Key Vault
+output keyVaultResourceId string = keyVault.outputs.resourceId
+output keyVaultUri string = keyVault.outputs.keyVaultUri
+
+//step 3 - deploy db and server 
+@sys.description('The name of the PostgreSQL Server (DBHOST)')
+param postgreSQLServerName string
+
+@sys.description('The administrator username for the PostgreSQL Server (DBUSER)')
+param postgreSQLAdminUsername string
+
+@sys.description('The administrator password for the PostgreSQL Server (DBPASS)')
+@secure()
+param postgreSQLAdminPassword string
+
+@sys.description('The name of the PostgreSQL Database (DBNAME)')
+param postgreSQLDatabaseName string
+
+@sys.description('Specifies the tier and SKU for the PostgreSQL Server')
+param postgreSQLSkuName string
+
+@sys.description('Specifies the backup retention period in days')
+param postgreSQLBackupRetentionDays int
+
+@sys.description('Specifies whether geo-redundant backup is enabled')
+param postgreSQLGeoRedundantBackup string
+
+@sys.description('Specifies the storage size in GB')
+param postgreSQLStorageSizeGb int
+
+module postgreSQL 'modules/postgresql.bicep' = {
+  name: 'postgreSQL-${userAlias}'
+  params: {
+    serverName: postgreSQLServerName
+    adminUsername: postgreSQLAdminUsername
+    adminPassword: postgreSQLAdminPassword
+    databaseName: postgreSQLDatabaseName
+    location: location
+    skuName: postgreSQLSkuName
+    backupRetentionDays: postgreSQLBackupRetentionDays
+    geoRedundantBackup: postgreSQLGeoRedundantBackup
+    storageSizeGb: postgreSQLStorageSizeGb
+    tags: {
+      Environment: environmentType
+      Application: 'BestBank'
+    }
+  }
+}
+// Outputs for PostgreSQL
+output postgreSQLServerId string = postgreSQL.outputs.serverId
+output postgreSQLFqdn string = postgreSQL.outputs.fullyQualifiedDomainName
+output postgreSQLDatabaseId string = postgreSQL.outputs.databaseId
+
+
+//step 4 - deploy LAW
 // Log Analytics Parameters
 @sys.description('Name of the Log Analytics workspace')
 param logAnalyticsWorkspaceName string
@@ -55,7 +134,7 @@ module logAnalytics 'modules/app-log.bicep' = {
 output logAnalyticsWorkspaceId string = logAnalytics.outputs.logAnalyticsWorkspaceId
 
 
-//Step 3 - deploy AI
+//Step 5 - deploy AI
 //application-insight-paramaters 
 @sys.description('The name of the Application Insights instance')
 param appInsightsName string
@@ -124,4 +203,69 @@ output appInsightsApplicationId string = appInsights.outputs.applicationId
 output appInsightsInstrumentationKey string = appInsights.outputs.instrumentationKey
 output appInsightsConnectionString string = appInsights.outputs.connectionString
 
+// Step 6: Deploy App Service Plan
+// Parameters for App Service Plan
+@sys.description('The name of the App Service Plan')
+param appServicePlanName string
+
+@sys.description('The SKU for the App Service Plan (e.g., F1, B1)')
+@allowed([
+  'B1'
+  'F1'
+])
+param appServicePlanSku string 
+
+//App Service Plan module
+module appServicePlan 'modules/app-service-plan.bicep' = {
+  name: appServicePlanName
+  params: {
+    location: location
+    appServicePlanName: appServicePlanName
+    sku: appServicePlanSku
+  }
+}
+
+// Outputs for App Service Plan
+output appServicePlanID string = appServicePlan.outputs.id
+output appServicePlanName string = appServicePlan.outputs.name
+
+
+//7-  Parameters for App Service Backend
+// App Service Backend Parameters
+@sys.description('The name of the backend App Service')
+param appServiceBackendName string
+
+@sys.description('The name of the backend Docker image')
+param backendDockerImageName string
+
+@sys.description('The version of the backend Docker image')
+param backendDockerImageVersion string
+
+@sys.description('The app settings for the backend App Service')
+param backendAppSettings array
+
+// App Service Backend Module
+module appServiceBackend 'modules/app-service-be.bicep' = {
+  name: 'appServiceBackend-deployment'
+  params: {
+    location: location
+    name: appServiceBackendName
+    appServicePlanId: appServicePlan.outputs.id
+    dockerRegistryName: containerRegistryName
+    dockerRegistryServerUserName: containerRegistry.outputs.adminUsername
+    dockerRegistryServerPassword: containerRegistry.outputs.adminPassword
+    dockerRegistryImageName: backendDockerImageName
+    dockerRegistryImageVersion: backendDockerImageVersion
+    appSettings: backendAppSettings
+    appCommandLine: '' // No custom startup commands for now
+  }
+  dependsOn: [
+    appServicePlan
+    containerRegistry
+  ]
+}
+
+// Outputs for App Service Backend
+output appServiceBackendHostName string = appServiceBackend.outputs.appServiceAppHostName
+output appServiceBackendId string = appServiceBackend.outputs.appId
 
