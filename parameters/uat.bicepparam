@@ -1,4 +1,4 @@
-using '../main2.bicep'
+using '../main.bicep'
 
 //1 - azure container-registry
 param containerRegistryName = 'bestbankContRegistryUat'
