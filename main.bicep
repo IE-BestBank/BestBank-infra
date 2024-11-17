@@ -252,8 +252,8 @@ module appServiceBackend 'modules/app-service-be.bicep' = {
     name: appServiceBackendName
     appServicePlanId: appServicePlan.outputs.id
     dockerRegistryName: containerRegistryName
-    dockerRegistryServerUserName: containerRegistry.outputs.adminUsername
-    dockerRegistryServerPassword: containerRegistry.outputs.adminPassword
+    dockerRegistryServerUserName: containerRegistry.outputs.containerRegistryUserName
+    dockerRegistryServerPassword: containerRegistry.outputs.containerRegistryPassword0    
     dockerRegistryImageName: backendDockerImageName
     dockerRegistryImageVersion: backendDockerImageVersion
     appSettings: backendAppSettings
@@ -269,3 +269,36 @@ module appServiceBackend 'modules/app-service-be.bicep' = {
 output appServiceBackendHostName string = appServiceBackend.outputs.appServiceAppHostName
 output appServiceBackendId string = appServiceBackend.outputs.appId
 
+//8- static web app deployment - parameters 
+@sys.description('The name of the Static Web App')
+param staticWebAppName string
+@sys.description('The SKU of the Static Web App (Free/Standard)')
+param staticWebAppSku string
+@sys.description('The location of the Static Web App')
+param staticWebAppLocation string
+@sys.description('The repository URL for the Static Web App')
+param staticWebAppRepositoryUrl string
+@sys.description('The branch to deploy the Static Web App from')
+param staticWebAppBranch string
+@sys.description('The GitHub personal access token for the repository')
+@secure()
+param staticWebAppRepositoryToken string
+
+//SWA deployment
+module staticWebApp 'modules/static-web-app.bicep' = {
+  name: 'staticWebAppDeployment'
+  params: {
+    name: staticWebAppName
+    sku: staticWebAppSku
+    location: staticWebAppLocation
+    repositoryUrl: staticWebAppRepositoryUrl
+    branch: staticWebAppBranch
+    repositoryToken: staticWebAppRepositoryToken
+    buildProperties: {
+      appLocation: 'src'
+      outputLocation: 'dist'
+    }
+  }
+}
+
+output staticWebAppHostname string = staticWebApp.outputs.defaultHostname

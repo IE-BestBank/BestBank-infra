@@ -58,3 +58,11 @@ param backendAppSettings = [
   { name: 'DEFAULT_ADMIN_USERNAME', value: 'BestBankUSER' } // Admin username
 ]
 
+//8- Static Web App Parameters
+param staticWebAppName = 'bestbank-swa-dev'
+param staticWebAppSku = 'Free' // Free for dev, Standard for UAT/Prod
+param staticWebAppLocation = 'westeurope' // Keep consistent across environments
+param staticWebAppRepositoryUrl = 'https://github.com/AlexaKhreiche/BestBank-fe'
+param staticWebAppBranch = 'main'
+@secure()
+param staticWebAppRepositoryToken = 'your-github-personal-access-token' // Store securely in deployment pipeline //where do i find this?
