@@ -96,7 +96,7 @@ module postgresSQLDatabase 'modules/db-postgresql.bicep' = {
   ]
 }
 
-
+//
 // //step 3 - deploy db and server 
 // @sys.description('The name of the PostgreSQL Server (DBHOST)')
 // param postgreSQLServerName string
