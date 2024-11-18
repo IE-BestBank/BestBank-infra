@@ -15,6 +15,8 @@ param roleAssignments array
 @sys.description('The user alias to add to the deployment name')
 param userAlias string = 'bestbank'
 param location string = resourceGroup().location
+@description('Principal ID for accessing secrets in the Key Vault')
+param principalId string
 
 module keyVault 'modules/key-vault.bicep' = {
   name: 'keyVault-${userAlias}'
@@ -25,7 +27,12 @@ module keyVault 'modules/key-vault.bicep' = {
     enableVaultForTemplateDeployment: enableVaultForTemplateDeployment
     enableSoftDelete: enableSoftDelete
     location: location
-    roleAssignments: roleAssignments
+    roleAssignments: [
+      {
+        principalId: principalId
+        roleDefinitionIdOrName: 'Key Vault Secrets User' // Dynamically assigns the secrets access role
+      }
+    ]
   }
 }
 
