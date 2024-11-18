@@ -83,17 +83,19 @@ module postgresSQLServer 'modules/server-postgresql.bicep' = {
 
 //databse params 
 @description('The PostgreSQL Database name')
-param postgresSQLDatabaseName string 
+param postgreSQLDatabaseName string 
 
-module postgresSQLDatabase 'modules/server-postgresql.bicep' = {
-  name: postgresSQLDatabaseName
+module postgresDb 'modules/db-postgresql.bicep' = {
+  name: postgreSQLDatabaseName 
   params: {
-    location: location
-    administratorLogin: administratorLogin
-    administratorLoginPassword: administratorLoginPassword
-    postgreSQLServerName: postgreSQLServerName
+    postgreSQLDatabaseName: postgreSQLDatabaseName
+    serverName: postgreSQLServerName
   }
+  dependsOn: [
+    postgresSQLServer
+  ]
 }
+
 
 // //step 3 - deploy db and server 
 // @sys.description('The name of the PostgreSQL Server (DBHOST)')

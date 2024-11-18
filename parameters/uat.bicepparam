@@ -19,7 +19,7 @@ param administratorLogin = 'iebankdbadmin'
 param administratorLoginPassword = ''
 
 //databse
-param postgresSQLDatabaseName = 'bestbank-db-uat'
+param postgreSQLDatabaseName = 'bestbank-db-uat'
 
 
 

@@ -22,7 +22,7 @@ param administratorLogin = 'iebankdbadmin'
 param administratorLoginPassword = ''
 
 //databse
-param postgresSQLDatabaseName = 'bestbank-db-dev'
+param postgreSQLDatabaseName = 'bestbank-db-dev'
 
 // //3- DB & Server 
 // // PostgreSQL parameters (aligning with app service)
