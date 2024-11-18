@@ -26,15 +26,7 @@ param sku string = 'standard'
 
 
 // Role Assignments to Grant Access to All Users in the AAD Tenant
-param roleAssignments array = [
-  {
-    principalId: subscription().tenantId // Grant access to all authenticated users in the tenant
-    roleDefinitionIdOrName: subscriptionResourceId(
-      'Microsoft.Authorization/roleDefinitions',
-      '4633458b-17de-408a-b874-0445c86b69e6' // Key Vault Secrets User Role
-    )
-  }
-]
+param roleAssignments array = []
 
 var builtInRoleNames = {
   Reader: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'f58310d9-a9f6-439a-9e8d-f62e7b41a168') // Reader role
@@ -67,8 +59,7 @@ for (roleAssignment, index) in (roleAssignments ?? []): {
     roleDefinitionId:builtInRoleNames[?roleAssignment.roleDefinitionIdOrName] ?? roleAssignment.roleDefinitionIdOrName
     principalId: roleAssignment.principalId
     description: roleAssignment.?description
-    //principalType: roleAssignment.?principalType
-    principalType: 'User'
+    principalType: roleAssignment.?principalType
     condition: roleAssignment.?condition
     conditionVersion: !empty(roleAssignment.?condition) ? (roleAssignment.?conditionVersion ?? '2.0') : null // Must only be set if condtion is set
     delegatedManagedIdentityResourceId: roleAssignment.?delegatedManagedIdentityResourceId
