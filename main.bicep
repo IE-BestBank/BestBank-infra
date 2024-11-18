@@ -71,7 +71,7 @@ param administratorLogin string
 param administratorLoginPassword string
 
 //3 - deploy server 
-module postgresSQLServer 'modules/server-postgresql.bicep' = {
+module postgreSQLServer 'modules/server-postgresql.bicep' = {
   name: postgreSQLServerName
   params: {
     location: location
@@ -89,10 +89,10 @@ module postgresDb 'modules/db-postgresql.bicep' = {
   name: postgreSQLDatabaseName 
   params: {
     postgreSQLDatabaseName: postgreSQLDatabaseName
-    serverName: postgresSQLServer.outputs.postgreSQLServerName
+    serverName: postgreSQLServer.outputs.postgreSQLServerName
   }
   dependsOn: [
-    postgresSQLServer
+    postgreSQLServer
   ]
 }
 
