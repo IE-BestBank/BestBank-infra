@@ -12,6 +12,9 @@ resource containerRegistry 'Microsoft.ContainerRegistry/registries@2023-07-01' =
   }
 }
 
+//need to add resource KeyVaultSecret
+
+
 // Outputs (temporary, will use Key Vault later)
 #disable-next-line outputs-should-not-contain-secrets
 output containerRegistryLoginServer string = containerRegistry.properties.loginServer // ACR login server URL
