@@ -13,6 +13,7 @@ param enableSoftDelete bool
 @sys.description('The user alias to add to the deployment name')
 param userAlias string = 'bestbank'
 param location string = resourceGroup().location
+param keyVaultRoleAssignments array = []
 
 
 // Deploy Key Vault
@@ -24,6 +25,7 @@ module keyVault 'modules/key-vault.bicep' = {
     enableVaultForDeployment: enableVaultForDeployment
     enableVaultForTemplateDeployment: enableVaultForTemplateDeployment
     enableSoftDelete: enableSoftDelete
+    roleAssignments: keyVaultRoleAssignments
     location: location
   }
 }
