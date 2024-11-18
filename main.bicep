@@ -85,7 +85,7 @@ module postgreSQLServer 'modules/server-postgresql.bicep' = {
 @description('The PostgreSQL Database name')
 param postgreSQLDatabaseName string 
 
-module postgresDb 'modules/db-postgresql.bicep' = {
+module postgresSQLDatabase 'modules/db-postgresql.bicep' = {
   name: postgreSQLDatabaseName 
   params: {
     postgreSQLDatabaseName: postgreSQLDatabaseName
