@@ -89,7 +89,7 @@ module postgresDb 'modules/db-postgresql.bicep' = {
   name: postgreSQLDatabaseName 
   params: {
     postgreSQLDatabaseName: postgreSQLDatabaseName
-    serverName: postgreSQLServer.outputs.postgreSQLServerName
+    serverName: postgreSQLServerName
   }
   dependsOn: [
     postgreSQLServer
