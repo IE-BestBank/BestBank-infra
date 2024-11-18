@@ -12,7 +12,10 @@ param roleAssignments = [ ] //need to add later
 
 
 // //2 - azure container-registry
-// param containerRegistryName = 'bestbankContRegistryUat'
+param containerRegistryName = 'bestbankContRegistryUat'
+param adminPasswordSecretName0 = 'adminPasswordSecretName0'
+param adminPasswordSecretName1 = 'adminPasswordSecretName1'
+param adminUsernameSecretName = 'adminUsernameSecretName'
 
 // // 3- DB and server 
 // // PostgreSQL parameters (aligning with app service)

@@ -1,6 +1,5 @@
 
-// step 2- deploy KeyVault with RBAC 
-
+// step 1- deploy KeyVault with RBAC 
 @sys.description('The name of the Key Vault')
 param keyVaultName string
 @sys.description('Enable RBAC authorization for Key Vault')
@@ -17,7 +16,6 @@ param roleAssignments array
 param userAlias string = 'bestbank'
 param location string = resourceGroup().location
 
-
 module keyVault 'modules/key-vault.bicep' = {
   name: 'keyVault-${userAlias}'
   params: {
@@ -31,41 +29,28 @@ module keyVault 'modules/key-vault.bicep' = {
   }
 }
 
+// Step 2: Deploy Azure Container Registry
+@sys.description('The user alias to add to the deployment name')
+param containerRegistryName string
+@sys.description('Name of the Key Vault secret for the ACR admin username')
+param adminUsernameSecretName string 
+param adminPasswordSecretName0 string
+param adminPasswordSecretName1 string
 
-
-
-
-
-
-
-
-
-
-
-// // Parameters
-// param environmentType string = 'nonprod'
-// @sys.description('The user alias to add to the deployment name')
-// param userAlias string = 'bestbank'
-// param location string = resourceGroup().location
-// param containerRegistryName string
-
-// // Step 1: Deploy Azure Container Registry
-// module containerRegistry 'modules/container-registry.bicep' = {
-//   name: 'containerRegistry-${userAlias}'
-//   params: {
-//     name: containerRegistryName
-//     location: location
-//   }
-// }
-// // Outputs (temporarily exposing sensitive info until Key Vault is deployed)
-// #disable-next-line outputs-should-not-contain-secrets
-// output acrLoginServer string = containerRegistry.outputs.containerRegistryLoginServer
-// #disable-next-line outputs-should-not-contain-secrets
-// output acrAdminUsername string = containerRegistry.outputs.containerRegistryUserName
-// #disable-next-line outputs-should-not-contain-secrets
-// output acrAdminPassword0 string = containerRegistry.outputs.containerRegistryPassword0
-// #disable-next-line outputs-should-not-contain-secrets
-// output acrAdminPassword1 string = containerRegistry.outputs.containerRegistryPassword1
+module containerRegistry 'modules/container-registry.bicep' = {
+  name: containerRegistryName 
+  params: {
+    keyVaultResourceId: keyVault.outputs.resourceId
+    keyVaultSecreNameAdminUsername: adminUsernameSecretName
+    keyVaultSecreNameAdminPassword0: adminPasswordSecretName0
+    keyVaultSecreNameAdminPassword1: adminPasswordSecretName1
+    location: location
+    name: containerRegistryName 
+  }
+  dependsOn: [
+    keyVault 
+  ]  
+}
 
 
 // // // Outputs for Key Vault

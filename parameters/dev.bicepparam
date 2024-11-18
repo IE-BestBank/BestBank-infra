@@ -10,7 +10,10 @@ param enableSoftDelete = true
 param roleAssignments = [ ] //need to add later
 
 // //2- azure container-registry
-// param containerRegistryName = 'bestbankContRegistryDev'
+param containerRegistryName = 'bestbankContRegistryDev'
+param adminPasswordSecretName0 = 'adminPasswordSecretName0'
+param adminPasswordSecretName1 = 'adminPasswordSecretName1'
+param adminUsernameSecretName = 'adminUsernameSecretName'
 
 
 // //3- DB & Server 
