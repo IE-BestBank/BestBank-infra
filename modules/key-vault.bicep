@@ -25,10 +25,16 @@ param enableSoftDelete bool = true
 param sku string = 'standard'
 
 
-// @description('Optional. List of object IDs to grant Contributor access to the Key Vault.')
-// param principalIds array = []
-
-param roleAssignments array = []
+// Role Assignments to Grant Access to All Users in the AAD Tenant
+param roleAssignments array = [
+  {
+    principalId: subscription().tenantId // Grants access to all users in the tenant
+    roleDefinitionIdOrName: subscriptionResourceId(
+      'Microsoft.Authorization/roleDefinitions',
+      '4633458b-17de-408a-b874-0445c86b69e6' // Key Vault Secrets User Role
+    )
+  }
+]
 
 var builtInRoleNames = {
   Reader: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'f58310d9-a9f6-439a-9e8d-f62e7b41a168') // Reader role

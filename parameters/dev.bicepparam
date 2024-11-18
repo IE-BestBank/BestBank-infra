@@ -7,7 +7,9 @@ param enableRbacAuthorization = true
 param enableVaultForDeployment = true
 param enableVaultForTemplateDeployment = true
 param enableSoftDelete = true
-param roleAssignments = [ ] //need to add later
+
+
+
 
 // //2- azure container-registry
 param containerRegistryName = 'bestbankContRegistryDev'

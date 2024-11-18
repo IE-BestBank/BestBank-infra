@@ -1,12 +1,11 @@
 using '../main.bicep'
 
 //1-Key Vault parameters
-param keyVaultName = 'keyVault-bestbank-uat'
+param keyVaultName = 'keyVault-bestbank-dev'
 param enableRbacAuthorization = true
 param enableVaultForDeployment = true
 param enableVaultForTemplateDeployment = true
 param enableSoftDelete = true
-param roleAssignments = [ ] //need to add later 
 
 
 
