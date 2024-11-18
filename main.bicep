@@ -63,7 +63,7 @@ module containerRegistry 'modules/container-registry.bicep' = {
     keyVault 
   ]  
 }
-
+//server params 
 @description('The PostgreSQL Server name')
 param postgreSQLServerName string
 param administratorLogin string 
@@ -81,6 +81,19 @@ module postgresSQLServer 'modules/server-postgresql.bicep' = {
   }
 }
 
+//databse params 
+@description('The PostgreSQL Database name')
+param postgresSQLDatabaseName string 
+
+module postgresSQLDatabase 'modules/server-postgresql.bicep' = {
+  name: postgresSQLDatabaseName
+  params: {
+    location: location
+    administratorLogin: administratorLogin
+    administratorLoginPassword: administratorLoginPassword
+    postgreSQLServerName: postgreSQLServerName
+  }
+}
 
 // //step 3 - deploy db and server 
 // @sys.description('The name of the PostgreSQL Server (DBHOST)')

@@ -18,6 +18,15 @@ param postgreSQLServerName = 'bestbank-dbsrv-uat'
 param administratorLogin = 'iebankdbadmin'
 param administratorLoginPassword = ''
 
+//databse
+param postgresSQLDatabaseName = 'bestbank-db-uat'
+
+
+
+
+
+
+
 // // 3- DB and server 
 // // PostgreSQL parameters (aligning with app service)
 // param postgreSQLServerName = 'bestbank-dbsrv-uat' // DBHOST
