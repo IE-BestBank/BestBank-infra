@@ -25,8 +25,19 @@ param enableSoftDelete bool = true
 param sku string = 'standard'
 
 
-// Role Assignments to Grant Access to All Users in the AAD Tenant
-param roleAssignments array = []
+// Role Assignments to Grant Access to whoever you want - reuqires object ID 
+param roleAssignments array = [
+  {
+    principalId: '25d8d697-c4a2-479f-96e0-15593a830ae5' // BCSAI2024-DEVOPS-STUDENTS-A-SP
+    roleDefinitionIdOrName: 'Key Vault Secrets User'
+    principalType: 'ServicePrincipal'
+    }
+    {
+      principalId: 'a03130df-486f-46ea-9d5c-70522fe056de' // BCSAI2024-DEVOPS-STUDENTS-A
+      roleDefinitionIdOrName: 'Key Vault Administrator'
+      principalType: 'Group'
+      }
+]
 
 var builtInRoleNames = {
   Reader: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'f58310d9-a9f6-439a-9e8d-f62e7b41a168') // Reader role

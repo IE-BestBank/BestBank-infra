@@ -2,6 +2,7 @@ using '../main.bicep'
 
 
 //1-Key Vault parameters
+// Key Vault Parameters
 param keyVaultName = 'keyVault-bestbank-dev'
 param enableRbacAuthorization = true
 param enableVaultForDeployment = true

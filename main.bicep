@@ -14,6 +14,7 @@ param enableSoftDelete bool
 param userAlias string = 'bestbank'
 param location string = resourceGroup().location
 
+
 // Deploy Key Vault
 module keyVault 'modules/key-vault.bicep' = {
   name: 'keyVault-${userAlias}'
