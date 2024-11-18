@@ -10,14 +10,16 @@ param enableVaultForTemplateDeployment = true
 param enableSoftDelete = true
 
 
-
-
 // //2- azure container-registry
 param containerRegistryName = 'bestbankContRegistryDev'
 param adminPasswordSecretName0 = 'adminPasswordSecretName0'
 param adminPasswordSecretName1 = 'adminPasswordSecretName1'
 param adminUsernameSecretName = 'adminUsernameSecretName'
 
+//server 
+param postgreSQLServerName = 'bestbank-dbsrv-dev'
+param administratorLogin = 'iebankdbadmin'
+param administratorLoginPassword = ''
 
 // //3- DB & Server 
 // // PostgreSQL parameters (aligning with app service)

@@ -50,12 +50,4 @@ resource secretAdminUserPassword1 'Microsoft.KeyVault/vaults/secrets@2023-02-01'
 output containerRegistryLoginServer string = containerRegistry.properties.loginServer // ACR login server URL
 
 
-// // Outputs (temporary, will use Key Vault later)
-// #disable-next-line outputs-should-not-contain-secrets
-// output containerRegistryLoginServer string = containerRegistry.properties.loginServer // ACR login server URL
-// #disable-next-line outputs-should-not-contain-secrets
-// output containerRegistryUserName string = containerRegistry.listCredentials().username // ACR admin username
-// #disable-next-line outputs-should-not-contain-secrets
-// output containerRegistryPassword0 string = containerRegistry.listCredentials().passwords[0].value // First admin password
-// #disable-next-line outputs-should-not-contain-secrets
-// output containerRegistryPassword1 string = containerRegistry.listCredentials().passwords[1].value // Second admin password
+
