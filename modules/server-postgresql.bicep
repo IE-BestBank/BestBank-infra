@@ -45,17 +45,17 @@ resource postgresSQLServerFirewallRules 'Microsoft.DBforPostgreSQL/flexibleServe
 }
 
 resource postgreSQLAdministrators 'Microsoft.DBforPostgreSQL/flexibleServers/administrators@2022-12-01' = {
-  name: '${postgresSQLServer.name}/${postgreSQLAdminServicePrincipalObjectId}'
+  name: postgreSQLAdminServicePrincipalObjectId
   properties: {
   principalName: postgreSQLAdminServicePrincipalName
   principalType: 'ServicePrincipal'
   tenantId: subscription().tenantId
   }
-  dependsOn: [
-  postgresSQLServer //server should be created first 
+  dependsOn: [ 
   postgresSQLServerFirewallRules
   ]
   }
+
   
 
 // Outputs
