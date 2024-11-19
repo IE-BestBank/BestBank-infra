@@ -34,8 +34,6 @@ resource postgresSQLServer 'Microsoft.DBforPostgreSQL/flexibleServers@2022-12-01
   }
 }
 
-
-
 // Firewall rule to allow Azure services
 resource postgresSQLServerFirewallRules 'Microsoft.DBforPostgreSQL/flexibleServers/firewallRules@2022-12-01' = {
   name: 'AllowAllAzureServicesAndResourcesWithinAzureIps'
@@ -58,8 +56,8 @@ resource postgreSQLAdministrators 'Microsoft.DBforPostgreSQL/flexibleServers/adm
   ]
   }
   
-  output id string = postgresSQLServer.id
 
 // Outputs
+output id string = postgresSQLServer.id
 output postgreSQLServerName string = postgresSQLServer.name
 // output postgreSQLServerAdmin string = administratorLogin
