@@ -3,7 +3,7 @@ using '../main.bicep'
 
 //1-Key Vault parameters
 // Key Vault Parameters
-param keyVaultName = 'keyVault-BestBank-dev' //changed key vault name bec of past softdelte = true 
+param keyVaultName = 'BestBank-KV-dev' //changed key vault name bec of past softdelte = true 
 param enableRbacAuthorization = true
 param enableVaultForDeployment = true
 param enableVaultForTemplateDeployment = true

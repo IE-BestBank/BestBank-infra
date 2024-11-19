@@ -69,7 +69,10 @@ param administratorLogin string
 @secure()
 param administratorLoginPassword string
 
-//3 - deploy server 
+//3 - deploy app service (be - cont)
+
+
+//4- deploy server 
 module postgreSQLServer 'modules/server-postgresql.bicep' = {
   name: postgreSQLServerName
   params: {
@@ -80,7 +83,7 @@ module postgreSQLServer 'modules/server-postgresql.bicep' = {
   }
 }
 
-//databse params 
+//5- databse params 
 @description('The PostgreSQL Database name')
 param postgreSQLDatabaseName string 
 
