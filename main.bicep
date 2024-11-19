@@ -11,7 +11,6 @@ param enableVaultForTemplateDeployment bool
 @sys.description('Enable Key Vault\'s soft delete feature')
 param enableSoftDelete bool
 @sys.description('The user alias to add to the deployment name')
-param userAlias string = 'bestbank'
 param location string = resourceGroup().location
 param keyVaultRoleAssignments array = [
   {
