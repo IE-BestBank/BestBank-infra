@@ -6,6 +6,13 @@ param enableRbacAuthorization = true
 param enableVaultForDeployment = true
 param enableVaultForTemplateDeployment = true
 param enableSoftDelete = true
+param keyVaultRoleAssignments= [
+  {
+    principalId: '5b9e675a-0000-400e-a8d3-abcdef123456' // UAT Service Principal
+    roleDefinitionIdOrName: 'Key Vault Reader'
+    principalType: 'ServicePrincipal'
+  }
+]
 
 // //2 - azure container-registry
 param containerRegistryName = 'bestbankContRegistryUat'
