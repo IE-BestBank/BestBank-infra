@@ -62,28 +62,77 @@ module containerRegistry 'modules/container-registry.bicep' = {
     keyVault 
   ]  
 }
-//server params 
+//step 3- Deploy App Service Plan
 @description('The PostgreSQL Server name')
 param postgreSQLServerName string
-param administratorLogin string 
-@secure()
-param administratorLoginPassword string
+@sys.description('The name of the App Service Plan')
+param appServicePlanName string
+@sys.description('The SKU for the App Service Plan (e.g., F1, B1)')
+@allowed([
+  'B1'
+  'F1'
+])
+param appServicePlanSku string 
 
-//3 - deploy app service (be - cont)
-
-
-//4- deploy server 
-module postgreSQLServer 'modules/server-postgresql.bicep' = {
-  name: postgreSQLServerName
+module appServicePlan 'modules/app-service-plan.bicep' = {
+  name: appServicePlanName
   params: {
     location: location
-    administratorLogin: administratorLogin
-    administratorLoginPassword: administratorLoginPassword
-    postgreSQLServerName: postgreSQLServerName
+    appServicePlanName: appServicePlanName
+    sku: appServicePlanSku
   }
 }
 
-//5- databse params 
+//step 4 - deploy app service (be - cont)
+@sys.description('The name of the backend App Service')
+param appServiceWebsiteBEName string
+@sys.description('The name of the backend Docker image')
+param dockerRegistryImageName string
+@sys.description('The version of the backend Docker image')
+param dockerRegistryImageVersion string
+@sys.description('The app settings for the backend App Service')
+param appServiceBeAppSettings array
+
+//refrence to keyvault used to retireve secrets from KV
+resource keyVaultReference 'Microsoft.KeyVault/vaults@2023-07-01'existing = {
+  name: keyVaultName
+}
+module appServiceBE 'modules/app-service-be.bicep' = {
+  name: appServiceWebsiteBEName
+  params: {
+  name: appServiceWebsiteBEName
+  location: location
+  appServicePlanId: appServicePlan.outputs.id
+  appCommandLine: ''
+  appSettings: appServiceBeAppSettings
+  dockerRegistryName: containerRegistryName
+  dockerRegistryServerUserName: keyVaultReference.getSecret(adminUsernameSecretName)
+  dockerRegistryServerPassword: keyVaultReference.getSecret(adminPasswordSecretName0)
+  dockerRegistryImageName: dockerRegistryImageName
+  dockerRegistryImageVersion: dockerRegistryImageVersion
+  }
+  dependsOn: [
+  appServicePlan
+  containerRegistry
+  keyVault
+  ]
+  }
+
+//step 5- deploy server 
+param userAlias string = 'bestbank'
+module postgresSQLServer 'modules/server-postgresql.bicep' = {
+  name: 'psqlsrv-${userAlias}'
+  params: {
+  name: postgreSQLServerName
+  postgreSQLAdminServicePrincipalObjectId: appServiceBE.outputs.systemAssignedIdentityPrincipalId
+  postgreSQLAdminServicePrincipalName: appServiceWebsiteBEName
+  }
+  dependsOn: [
+    appServiceBE
+  ]
+  }
+
+//step 6- deploy databse  
 @description('The PostgreSQL Database name')
 param postgreSQLDatabaseName string 
 
@@ -94,11 +143,12 @@ module postgresSQLDatabase 'modules/db-postgresql.bicep' = {
     serverName: postgreSQLServerName
   }
   dependsOn: [
-    postgreSQLServer
+    postgresSQLServer
   ]
 }
 
-//
+
+
 // //step 3 - deploy db and server 
 // @sys.description('The name of the PostgreSQL Server (DBHOST)')
 // param postgreSQLServerName string
@@ -249,71 +299,7 @@ module postgresSQLDatabase 'modules/db-postgresql.bicep' = {
 // output appInsightsInstrumentationKey string = appInsights.outputs.instrumentationKey
 // output appInsightsConnectionString string = appInsights.outputs.connectionString
 
-// // Step 6: Deploy App Service Plan
-// // Parameters for App Service Plan
-// @sys.description('The name of the App Service Plan')
-// param appServicePlanName string
 
-// @sys.description('The SKU for the App Service Plan (e.g., F1, B1)')
-// @allowed([
-//   'B1'
-//   'F1'
-// ])
-// param appServicePlanSku string 
-
-// //App Service Plan module
-// module appServicePlan 'modules/app-service-plan.bicep' = {
-//   name: appServicePlanName
-//   params: {
-//     location: location
-//     appServicePlanName: appServicePlanName
-//     sku: appServicePlanSku
-//   }
-// }
-
-// // Outputs for App Service Plan
-// output appServicePlanID string = appServicePlan.outputs.id
-// output appServicePlanName string = appServicePlan.outputs.name
-
-
-// //7-  Parameters for App Service Backend
-// // App Service Backend Parameters
-// @sys.description('The name of the backend App Service')
-// param appServiceBackendName string
-
-// @sys.description('The name of the backend Docker image')
-// param backendDockerImageName string
-
-// @sys.description('The version of the backend Docker image')
-// param backendDockerImageVersion string
-
-// @sys.description('The app settings for the backend App Service')
-// param backendAppSettings array
-
-// // App Service Backend Module
-// module appServiceBackend 'modules/app-service-be.bicep' = {
-//   name: 'appServiceBackend-deployment'
-//   params: {
-//     location: location
-//     name: appServiceBackendName
-//     appServicePlanId: appServicePlan.outputs.id
-//     dockerRegistryName: containerRegistryName
-//     dockerRegistryServerUserName: containerRegistry.outputs.containerRegistryUserName
-//     dockerRegistryServerPassword: containerRegistry.outputs.containerRegistryPassword0    
-//     dockerRegistryImageName: backendDockerImageName
-//     dockerRegistryImageVersion: backendDockerImageVersion
-//     appSettings: backendAppSettings
-//     appCommandLine: '' // No custom startup commands for now
-//   }
-//   dependsOn: [
-//     appServicePlan
-//     containerRegistry
-//   ]
-// }
-
-// // Outputs for App Service Backend
-// // output appServiceBackendHostName string = appServiceBackend.outputs.appServiceAppHostName
-// // output appServiceBackendId string = appServiceBackend.outputs.appId
 
 // //8- static web app deployment - parameters 
 // @sys.description('The name of the Static Web App')

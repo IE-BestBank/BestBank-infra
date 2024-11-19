@@ -18,11 +18,33 @@ param adminUsernameSecretName = 'adminUsernameSecretName'
 
 //server 
 param postgreSQLServerName = 'bestbank-dbsrv-dev'
-param administratorLogin = 'iebankdbadmin'
-param administratorLoginPassword = ''
+// param administratorLogin = 'iebankdbadmin'
+// param administratorLoginPassword = ''
 
 //databse
 param postgreSQLDatabaseName = 'bestbank-db-dev'
+
+
+//6- ASP 
+// App Service Plan parameters for the dev environment
+param appServicePlanName = 'bestbank-asp-be-dev' // Unique name for the App Service Plan
+param appServicePlanSku = 'F1' // Pricing tier (e.g., F1 for free, B1 for basic) --> i think we should do f1 for dev and b1 for uat and prod 
+
+//7- app service - containerized be 
+// App Service Backend Parameters for Dev
+param appServiceWebsiteBEName = 'bestbank-be-dev' // Name of the backend App Service
+param dockerRegistryImageName = 'bestbank-backend' // Docker image name
+param dockerRegistryImageVersion = 'latest' // Docker image version
+param appServiceBeAppSettings = [
+  { name: 'ENV', value: 'dev' }
+  { name: 'DBHOST', value: 'bestbank-dbsrv-dev.postgres.database.azure.com' }
+  { name: 'DBNAME', value: 'bestbank-db-dev' }
+  { name: 'DBUSER', value: 'bestbank-be-dev' }
+  { name: 'FLASK_DEBUG', value: '1' }
+  { name: 'SCM_DO_BUILD_DURING_DEPLOYMENT', value:'true' }
+]
+
+
 
 // //3- DB & Server 
 // // PostgreSQL parameters (aligning with app service)
@@ -52,24 +74,6 @@ param postgreSQLDatabaseName = 'bestbank-db-dev'
 // param appInsightsPublicNetworkAccessForQuery = 'Enabled'
 // param appInsightsRetentionInDays = 365
 // param appInsightsSamplingPercentage = 100
-
-// //6- ASP 
-// // App Service Plan parameters for the dev environment
-// param appServicePlanName = 'bestbank-asp-be-dev' // Unique name for the App Service Plan
-// param appServicePlanSku = 'B1' // Pricing tier (e.g., F1 for free, B1 for basic) --> i think we should do f1 for dev and b1 for uat and prod 
-
-// //7- app service - containerized be 
-// // App Service Backend Parameters for Dev
-// param appServiceBackendName = 'bestbank-be-dev' // Name of the backend App Service
-// param backendDockerImageName = 'bestbank-backend' // Docker image name
-// param backendDockerImageVersion = 'latest' // Docker image version
-// param backendAppSettings = [
-//   { name: 'ENV', value: 'dev' }
-//   { name: 'DBHOST', value: 'bestbank-dbsrv-dev.postgres.database.azure.com' } // PostgreSQL FQDN
-//   { name: 'DBNAME', value: 'bestbank-db-dev' } // Database name
-//   { name: 'DBUSER', value: 'iebankdbadmin' } // Database user
-//   { name: 'DEFAULT_ADMIN_USERNAME', value: 'BestBankUSER' } // Admin username
-// ]
 
 // //8- Static Web App Parameters
 // param staticWebAppName = 'bestbank-swa-dev'

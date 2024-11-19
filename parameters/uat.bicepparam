@@ -15,13 +15,30 @@ param adminUsernameSecretName = 'adminUsernameSecretName'
 
 //server 
 param postgreSQLServerName = 'bestbank-dbsrv-uat'
-param administratorLogin = 'iebankdbadmin'
-param administratorLoginPassword = ''
+// param administratorLogin = 'iebankdbadmin'
+// param administratorLoginPassword = ''
 
 //databse
 param postgreSQLDatabaseName = 'bestbank-db-uat'
 
+//6- asp 
+// App Service Plan Parameters for uat
+param appServicePlanName = 'bestbank-asp-be-uat' // Unique name for the App Service Plan
+param appServicePlanSku = 'B1' // Pricing tier (e.g., F1 for free, B1 for basic
 
+//7- app service - containerized be 
+// App Service Backend Parameters for uat
+param appServiceWebsiteBEName = 'bestbank-be-uat' // Name of the backend App Service
+param dockerRegistryImageName = 'bestbank-backend' // Docker image name
+param dockerRegistryImageVersion = 'latest' // Docker image version
+param appServiceBeAppSettings = [
+  { name: 'ENV', value: 'uat' }
+  { name: 'DBHOST', value: 'bestbank-dbsrv-uat.postgres.database.azure.com' }
+  { name: 'DBNAME', value: 'bestbank-db-uat' }
+  { name: 'DBUSER', value: 'bestbank-be-uat' }
+  { name: 'FLASK_DEBUG', value: '1' }
+  { name: 'SCM_DO_BUILD_DURING_DEPLOYMENT', value:'true' }
+]
 
 
 
@@ -54,11 +71,6 @@ param postgreSQLDatabaseName = 'bestbank-db-uat'
 // param appInsightsPublicNetworkAccessForQuery = 'Enabled'
 // param appInsightsRetentionInDays = 365
 // param appInsightsSamplingPercentage = 100
-
-// //6- asp 
-// // App Service Plan Parameters for uat
-// param appServicePlanName = 'bestbank-asp-be-uat' // Unique name for the App Service Plan
-// param appServicePlanSku = 'B1' // Pricing tier (e.g., F1 for free, B1 for basic)
 
 
 // //7- app service - containerized be 
