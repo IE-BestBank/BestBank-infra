@@ -18,7 +18,7 @@ param enableVaultForDeployment bool = true
 @description('Specifies if the vault is enabled for a template deployment.')
 param enableVaultForTemplateDeployment bool = true
 
-@description('Enable Key Vault\'s soft delete feature.')
+@description('Enable Key Vault\'s soft delete feature.') //soft delete for dev sghould be off becuase the secrets will be delted every night so we will get an error to try to deploy a secret that already exists so in uat and prod soft delete = true 
 param enableSoftDelete bool = true
 
 @description('Specifies the SKU for the vault.')
@@ -126,7 +126,7 @@ for (roleAssignment, index) in (roleAssignments ?? []): {
     description: roleAssignment.?description
     principalType: roleAssignment.?principalType
     condition: roleAssignment.?condition
-    conditionVersion: !empty(roleAssignment.?condition) ? (roleAssignment.?conditionVersion ?? '2.0') : null // Must only be set if condtion is set
+    conditionVersion: !empty(roleAssignment.?condition) ? (roleAssignment.?conditionVersion ?? '2.0') : null // Must only be set if condtion is set..
     delegatedManagedIdentityResourceId: roleAssignment.?delegatedManagedIdentityResourceId
   }
   scope: keyVault
