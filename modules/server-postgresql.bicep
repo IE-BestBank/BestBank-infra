@@ -52,6 +52,7 @@ resource postgreSQLAdministrators 'Microsoft.DBforPostgreSQL/flexibleServers/adm
   tenantId: subscription().tenantId
   }
   dependsOn: [
+  postgresSQLServer //server should be created first 
   postgresSQLServerFirewallRules
   ]
   }
