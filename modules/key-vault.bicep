@@ -19,7 +19,7 @@ param enableVaultForDeployment bool = true
 param enableVaultForTemplateDeployment bool = true
 
 @description('Enable Key Vault\'s soft delete feature.') //soft delete for dev sghould be off becuase the secrets will be delted every night so we will get an error to try to deploy a secret that already exists so in uat and prod soft delete = true 
-param enableSoftDelete bool = true
+param enableSoftDelete bool 
 
 @description('Specifies the SKU for the vault.')
 param sku string = 'standard'
