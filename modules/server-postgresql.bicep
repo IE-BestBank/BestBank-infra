@@ -45,6 +45,7 @@ resource postgresSQLServerFirewallRules 'Microsoft.DBforPostgreSQL/flexibleServe
 }
 
 resource postgreSQLAdministrators 'Microsoft.DBforPostgreSQL/flexibleServers/administrators@2022-12-01' = {
+  parent: postgresSQLServer
   name: postgreSQLAdminServicePrincipalObjectId
   properties: {
   principalName: postgreSQLAdminServicePrincipalName

@@ -97,7 +97,7 @@ param appServiceBeAppSettings array
 resource keyVaultReference 'Microsoft.KeyVault/vaults@2023-07-01'existing = {
   name: keyVaultName
 }
-module appServiceBE 'modules/app-service-be.bicep' = {
+module appServiceWebsiteBE 'modules/app-service-be.bicep' = {
   name: appServiceWebsiteBEName
   params: {
   name: appServiceWebsiteBEName
@@ -124,11 +124,11 @@ module postgresSQLServer 'modules/server-postgresql.bicep' = {
   name: 'psqlsrv-${userAlias}'
   params: {
   name: postgreSQLServerName
-  postgreSQLAdminServicePrincipalObjectId: appServiceBE.outputs.systemAssignedIdentityPrincipalId
+  postgreSQLAdminServicePrincipalObjectId: appServiceWebsiteBE.outputs.systemAssignedIdentityPrincipalId
   postgreSQLAdminServicePrincipalName: appServiceWebsiteBEName
   }
   dependsOn: [
-    appServiceBE
+    appServiceWebsiteBE
   ]
   }
 
