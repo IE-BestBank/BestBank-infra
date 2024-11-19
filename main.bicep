@@ -29,7 +29,7 @@ param keyVaultRoleAssignments array = [
 
 // Deploy Key Vault
 module keyVault 'modules/key-vault.bicep' = {
-  name: 'keyVault-${userAlias}'
+  name: keyVaultName
   params: {
     name: keyVaultName
     enableRbacAuthorization: enableRbacAuthorization
