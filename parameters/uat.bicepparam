@@ -6,12 +6,12 @@ param enableRbacAuthorization = true
 param enableVaultForDeployment = true
 param enableVaultForTemplateDeployment = true
 param enableSoftDelete = true
-param keyVaultRoleAssignments= [
+param keyVaultRoleAssignments= [ 
   {
-    principalId: '5b9e675a-0000-400e-a8d3-abcdef123456' // UAT Service Principal
-    roleDefinitionIdOrName: 'Key Vault Reader'
+    principalId: '25d8d697-c4a2-479f-96e0-15593a830ae5' // BCSAI2024-DEVOPS-STUDENTS-A-SP
+    roleDefinitionIdOrName: 'Key Vault Secrets User' //so that the SP can access the secrets such as the swa token 
     principalType: 'ServicePrincipal'
-  }
+    }
 ]
 
 // //2 - azure container-registry
@@ -48,6 +48,9 @@ param appServiceBeAppSettings = [
 ]
 
 
+//step 9 - deploy swa
+param StaticWebAppName = 'bestbank-SWA-dev'
+param SWAsku = 'Free'
 
 
 

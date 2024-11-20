@@ -56,6 +56,10 @@ param appServiceBeAppSettings = [
   { name: 'SCM_DO_BUILD_DURING_DEPLOYMENT', value:'true' }
 ]
 
+//9 swa 
+param StaticWebAppName = 'bestbank-SWA-dev'
+param SWAsku = 'Free'
+
 
 
 // //3- DB & Server 
