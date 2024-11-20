@@ -153,7 +153,7 @@ module staticWebApp 'modules/static-web-app.bicep' = {
 }
 
 
-// //step 3 - deploy db and server ..
+// //step 3 - deploy db and server ...
 // @sys.description('The name of the PostgreSQL Server (DBHOST)')
 // param postgreSQLServerName string
 
