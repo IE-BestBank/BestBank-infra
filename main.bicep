@@ -148,7 +148,7 @@ module staticWebApp 'modules/static-web-app.bicep' = {
     name: StaticWebAppName
     sku: SWAsku
     keyVaultResourceId: keyVault.outputs.resourceId
-    keyVaultSecretName: 'SWA_token'
+    keyVaultSecretName: 'SWAtoken'
   }
 }
 
