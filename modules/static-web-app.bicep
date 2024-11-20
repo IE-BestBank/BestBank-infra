@@ -7,7 +7,7 @@ param name string
 @description('The service tier')
 param sku string
 @description('Location of the resource')
-param location string = 'westeurope' 
+param location string = 'northeurope' 
 @secure()
 @description('GitHub repository personal access token')
 param repositoryToken string = ''

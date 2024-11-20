@@ -27,8 +27,8 @@ resource postgresSQLServer 'Microsoft.DBforPostgreSQL/flexibleServers@2022-12-01
     }
     version: '15'
     authConfig: { 
-      activeDirectoryAuth: 'Enabled' 
-      passwordAuth: 'Enabled'
+      activeDirectoryAuth: 'Enabled' //Microdoft Enfra auth = on 
+      passwordAuth: 'Disabled' // PostgreSQL auth = off
       tenantId: subscription().tenantId
     }
   }
