@@ -90,7 +90,7 @@ module appServiceWebsiteBE 'modules/app-service-be.bicep' = {
   name: appServiceWebsiteBEName
   params: {
   name: appServiceWebsiteBEName
-  location: location
+  location: resourceGroup().location
   appServicePlanId: appServicePlan.outputs.id
   appCommandLine: ''
   appSettings: appServiceBeAppSettings
