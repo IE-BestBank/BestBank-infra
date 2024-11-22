@@ -51,3 +51,34 @@ output containerRegistryLoginServer string = containerRegistry.properties.loginS
 
 
 
+//adding diagnostic settings
+param ContainerRegistryDiagnostics string ='myDiagnosticSetting'
+param WorkspaceResourceId string
+
+resource diagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
+  name: ContainerRegistryDiagnostics
+  scope: containerRegistry // Attach to the Container Registry
+  properties: {
+    workspaceId: WorkspaceResourceId // Log Analytics Workspace ID
+    logs: [
+      {
+        category: 'ContainerRegistryLoginEvents' // Tracks login events
+        enabled: true
+      }
+      {
+        category: 'ContainerRegistryRepositoryEvents' // Tracks repository events (push, pull, delete)
+        enabled: true
+      }
+      {
+        category: 'ContainerRegistryQuotaEvents' // Tracks quota events
+        enabled: true
+      }
+    ]
+    metrics: [
+      {
+        category: 'AllMetrics' // Tracks metrics for ACR
+        enabled: true
+      }
+    ]
+  }
+}

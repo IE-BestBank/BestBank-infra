@@ -24,8 +24,7 @@ param enableSoftDelete bool
 @description('Specifies the SKU for the vault.')
 param sku string = 'standard'
 
-param diagnosticSettingName string ='myDiagnosticSetting'
-param WorkspaceResourceId string
+
 
 // Role Assignments to Grant Access to whoever you want - reuqires object ID 
 param roleAssignments array 
@@ -124,6 +123,8 @@ for (roleAssignment, index) in (roleAssignments ?? []): {
 }
 ]
 
+param diagnosticSettingName string ='myDiagnosticSetting'
+param WorkspaceResourceId string
 
 // Outputs
 @description('The resource ID of the key vault.')

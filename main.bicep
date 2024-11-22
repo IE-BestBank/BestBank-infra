@@ -78,6 +78,7 @@ param adminPasswordSecretName1 string
 module containerRegistry 'modules/container-registry.bicep' = {
   name: containerRegistryName 
   params: {
+    WorkspaceResourceId: logAnalytics.outputs.logAnalyticsWorkspaceId //added for diagnostic settings 
     keyVaultResourceId: keyVault.outputs.resourceId
     keyVaultSecreNameAdminUsername: adminUsernameSecretName
     keyVaultSecreNameAdminPassword0: adminPasswordSecretName0
