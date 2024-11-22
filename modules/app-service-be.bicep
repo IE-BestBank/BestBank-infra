@@ -53,26 +53,38 @@ resource appServiceDiagnosticSettings 'Microsoft.Insights/diagnosticSettings@202
     workspaceId: WorkspaceResourceId // Log Analytics Workspace ID
     logs: [
       {
-        category: 'AppServiceConsoleLogs' // Captures application logs
+        category: 'AppServiceHTTPLogs' // Captures HTTP logs
         enabled: true
       }
       {
-        category: 'AppServiceFileAuditLogs' // Captures file system audit logs
+        category: 'AppServiceConsoleLogs' // Captures console logs
         enabled: true
       }
       {
-        category: 'AppServiceHttpLogs' // Captures HTTP request logs
+        category: 'AppServiceAppLogs' // Captures application logs
         enabled: true
       }
       {
-        category: 'AppServicePlatformLogs' // Captures platform-level logs
+        category: 'AppServiceAuditLogs' // Captures audit logs
+        enabled: true
+      }
+      {
+        category: 'AppServiceIPSecAuditLogs' // Captures IPSec audit logs
+        enabled: true
+      }
+      {
+        category: 'AppServicePlatformLogs' // Captures platform logs
+        enabled: true
+      }
+      {
+        category: 'AppServiceAuthenticationLogs' // Captures authentication logs
         enabled: true
       }
     ]
     metrics: [
       {
         category: 'AllMetrics' // Tracks all metrics for the app service
-        enabled: true
+        enabled: false
       }
     ]
   }
