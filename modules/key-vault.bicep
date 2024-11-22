@@ -141,20 +141,12 @@ resource diagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-01-pr
       {
         category: 'AllMetrics' // Key Vault metrics
         enabled: true
-        retentionPolicy: {
-          enabled: true
-          days: 365
-        }
       }
     ]
     logs: [
       {
         category: 'AuditEvent' // Logs for Key Vault access events
         enabled: true
-        retentionPolicy: {
-          enabled: true
-          days: 365
-        }
       }
     ]
   }
