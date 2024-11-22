@@ -15,41 +15,23 @@ param location string = resourceGroup().location
   'PerGB2018'
   'Standard'
 ])
-param skuName string = 'PerGB2018'
+param skuName string = 'PerGB2018' //for both dev and uat
 
 @description('Optional. Number of days data will be retained for.')
 @minValue(0)
 @maxValue(730)
-param dataRetention int = 365
+param dataRetention int = 30
 
-@description('Optional. The network access type for ingestion.')
-@allowed([
-  'Enabled'
-  'Disabled'
-])
-param publicNetworkAccessForIngestion string = 'Enabled'
-
-@description('Optional. The network access type for querying.')
-@allowed([
-  'Enabled'
-  'Disabled'
-])
-param publicNetworkAccessForQuery string = 'Enabled'
-
-@description('Optional. Tags for the resource.')
-param tags object = {}
 
 resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2022-10-01' = {
   location: location
   name: name
-  tags: tags
+  // tags: tags
   properties: {
     sku: {
       name: skuName
     }
     retentionInDays: dataRetention
-    publicNetworkAccessForIngestion: publicNetworkAccessForIngestion
-    publicNetworkAccessForQuery: publicNetworkAccessForQuery
   }
 }
 
