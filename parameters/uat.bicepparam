@@ -49,7 +49,7 @@ param appServiceBeAppSettings = [
 
 
 //step 9 - deploy swa
-param StaticWebAppName = 'bestbank-SWA-dev'
+param StaticWebAppName = 'bestbank-SWA-uat'
 param SWAsku = 'Free'
 
 
