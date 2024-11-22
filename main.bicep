@@ -90,7 +90,7 @@ module appServiceWebsiteBE 'modules/app-service-be.bicep' = {
   name: appServiceWebsiteBEName
   params: {
   name: appServiceWebsiteBEName
-  location: resourceGroup().location
+  location: location
   appServicePlanId: appServicePlan.outputs.id
   appCommandLine: ''
   appSettings: appServiceBeAppSettings
@@ -136,9 +136,24 @@ module postgresSQLDatabase 'modules/db-postgresql.bicep' = {
   ]
 }
 
+//step 9 - deploy swa 
+@sys.description('static web app name')
+param StaticWebAppName string
+
+param SWAsku string
+
+module staticWebApp 'modules/static-web-app.bicep' = {
+  name: StaticWebAppName
+  params: {
+    name: StaticWebAppName
+    sku: SWAsku
+    keyVaultResourceId: keyVault.outputs.resourceId
+    keyVaultSecretName: 'SWAtoken'
+  }
+}
 
 
-// //step 3 - deploy db and server 
+// //step 3 - deploy db and server ...
 // @sys.description('The name of the PostgreSQL Server (DBHOST)')
 // param postgreSQLServerName string
 
