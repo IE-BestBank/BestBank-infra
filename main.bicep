@@ -131,6 +131,7 @@ module appServiceWebsiteBE 'modules/app-service-be.bicep' = {
   params: {
   name: appServiceWebsiteBEName
   location: location
+  WorkspaceResourceId: logAnalytics.outputs.logAnalyticsWorkspaceId //added for diagnostic settings 
   appServicePlanId: appServicePlan.outputs.id
   appCommandLine: ''
   appSettings: appServiceBeAppSettings
@@ -139,6 +140,8 @@ module appServiceWebsiteBE 'modules/app-service-be.bicep' = {
   dockerRegistryServerPassword: keyVaultReference.getSecret(adminPasswordSecretName0)
   dockerRegistryImageName: dockerRegistryImageName
   dockerRegistryImageVersion: dockerRegistryImageVersion
+  connectionString: appInsights.outputs.connectionString
+  instrumentationKey: appInsights.outputs.instrumentationKey
   }
   dependsOn: [
   appServicePlan
