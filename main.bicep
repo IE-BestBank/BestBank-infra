@@ -57,6 +57,7 @@ module keyVault 'modules/key-vault.bicep' = {
   name: keyVaultName
   params: {
     name: keyVaultName
+    WorkspaceResourceId: logAnalytics.outputs.logAnalyticsWorkspaceId //added for diagnostic settings 
     enableRbacAuthorization: enableRbacAuthorization
     enableVaultForDeployment: enableVaultForDeployment
     enableVaultForTemplateDeployment: enableVaultForTemplateDeployment

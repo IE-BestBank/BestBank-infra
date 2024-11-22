@@ -24,6 +24,8 @@ param enableSoftDelete bool
 @description('Specifies the SKU for the vault.')
 param sku string = 'standard'
 
+param diagnosticSettingName string ='myDiagnosticSetting'
+param WorkspaceResourceId string
 
 // Role Assignments to Grant Access to whoever you want - reuqires object ID 
 param roleAssignments array 
@@ -129,3 +131,31 @@ output resourceId string = keyVault.id
 
 @description('The URI of the key vault.')
 output keyVaultUri string = keyVault.properties.vaultUri
+
+resource diagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
+  name: diagnosticSettingName
+  scope: keyVault // Attach to the Key Vault resource
+  properties: {
+    workspaceId: WorkspaceResourceId // Log Analytics Workspace ID - sends logs and metrics to the Log Analytics Workspace using the ID
+    metrics: [
+      {
+        category: 'AllMetrics' // Key Vault metrics
+        enabled: true
+        retentionPolicy: {
+          enabled: true
+          days: 365
+        }
+      }
+    ]
+    logs: [
+      {
+        category: 'AuditEvent' // Logs for Key Vault access events
+        enabled: true
+        retentionPolicy: {
+          enabled: true
+          days: 365
+        }
+      }
+    ]
+  }
+}
