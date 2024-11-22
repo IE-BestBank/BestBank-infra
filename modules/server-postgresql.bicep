@@ -63,3 +63,75 @@ resource postgreSQLAdministrators 'Microsoft.DBforPostgreSQL/flexibleServers/adm
 output id string = postgresSQLServer.id
 output postgreSQLServerName string = postgresSQLServer.name
 // output postgreSQLServerAdmin string = administratorLogin
+
+
+//adding diagnostic settings
+param WorkspaceResourceId string
+
+resource postgreSQLDiagnostics 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
+  name: 'PostgreSQLServerDiagnostic'
+  scope: postgresSQLServer
+  properties: {
+    workspaceId: WorkspaceResourceId
+    metrics: [
+      {
+        category: 'AllMetrics'
+        enabled: true
+        retentionPolicy: {
+          enabled: true
+          days: 365
+        }
+      }
+    ]
+    logs: [
+      {
+        category: 'PostgreSQLLogs'
+        enabled: true
+        retentionPolicy: {
+          enabled: false
+          days: 0
+        }
+      }
+      {
+        category: 'PostgreSQLFlexSessions'
+        enabled: true
+        retentionPolicy: {
+          enabled: false
+          days: 0
+        }
+      }
+      {
+        category: 'PostgreSQLFlexQueryStoreRuntime'
+        enabled: true
+        retentionPolicy: {
+          enabled: false
+          days: 0
+        }
+      }
+      {
+        category: 'PostgreSQLFlexQueryStoreWaitStats'
+        enabled: true
+        retentionPolicy: {
+          enabled: false
+          days: 0
+        }
+      }
+      {
+        category: 'PostgreSQLFlexTableStats'
+        enabled: true
+        retentionPolicy: {
+          enabled: false
+          days: 0
+        }
+      }
+      {
+        category: 'PostgreSQLFlexDatabaseXacts'
+        enabled: true
+        retentionPolicy: {
+          enabled: false
+          days: 0
+        }
+      }
+    ]
+  }
+}

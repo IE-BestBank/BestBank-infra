@@ -153,6 +153,7 @@ module postgresSQLServer 'modules/server-postgresql.bicep' = {
   name: 'psqlsrv-${userAlias}'
   params: {
   name: postgreSQLServerName
+  WorkspaceResourceId: logAnalytics.outputs.logAnalyticsWorkspaceId //added for diagnostic settings 
   postgreSQLAdminServicePrincipalObjectId: appServiceWebsiteBE.outputs.systemAssignedIdentityPrincipalId
   postgreSQLAdminServicePrincipalName: appServiceWebsiteBEName
   }
