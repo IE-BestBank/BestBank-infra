@@ -69,10 +69,6 @@ resource diagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-01-pr
         category: 'ContainerRegistryRepositoryEvents' // Tracks repository events (push, pull, delete)
         enabled: true
       }
-      {
-        category: 'ContainerRegistryQuotaEvents' // Tracks quota events
-        enabled: true
-      }
     ]
     metrics: [
       {
