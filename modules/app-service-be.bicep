@@ -8,12 +8,18 @@ param dockerRegistryServerUserName string
 param dockerRegistryServerPassword string
 param dockerRegistryImageName string
 param dockerRegistryImageVersion string = 'latest'
-param appSettings array = []
 param appCommandLine string = ''
+param appSettings array = []
 @description('Log Analytics Workspace Resource ID to send logs/metrics.')
 param WorkspaceResourceId string
 param instrumentationKey string
 param connectionString string
+@secure()
+param adminUsername string
+@secure()
+param adminPassword string
+
+
 
 var dockerAppSettings = [
   { name: 'DOCKER_REGISTRY_SERVER_URL', value: 'https://${dockerRegistryName}.azurecr.io' }
@@ -28,6 +34,11 @@ var appInsightsSettings = [
   { name: 'XDT_MicrosoftApplicationInsights_NodeJS', value: '1' }
 ]
 
+var mergedAppSettings = union(appSettings, [
+  { name: 'DEFAULT_ADMIN_USERNAME', value: adminUsername }
+  { name: 'DEFAULT_ADMIN_PASS', value: adminPassword }
+], dockerAppSettings, appInsightsSettings)
+
 resource appServiceApp 'Microsoft.Web/sites@2022-03-01' = {
   name: name
   location: location
@@ -40,7 +51,8 @@ resource appServiceApp 'Microsoft.Web/sites@2022-03-01' = {
       alwaysOn: false
       ftpsState: 'FtpsOnly'
       appCommandLine: appCommandLine
-      appSettings: union(appSettings, dockerAppSettings, appInsightsSettings)
+      appSettings: mergedAppSettings
+      // appSettings: union(appSettings, dockerAppSettings, appInsightsSettings)
     }
   }
 }
