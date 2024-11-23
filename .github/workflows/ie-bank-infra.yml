@@ -67,6 +67,6 @@ jobs:
           resourceGroupName: ${{ env.RESOURCE_GROUP_UAT }}
           template: ./main.bicep
           parameters: ./parameters/uat.bicepparam adminUsername=${{ secrets.DEFAULT_ADMIN_USERNAME }} adminPassword=${{ secrets.DEFAULT_ADMIN_PASS }}
-          
+          #added the secrets for uat 
             
           deploymentName: ${{ env.USER_ALIAS }}-uat
