@@ -121,6 +121,12 @@ param dockerRegistryImageName string
 param dockerRegistryImageVersion string
 @sys.description('The app settings for the backend App Service')
 param appServiceBeAppSettings array
+@secure()
+param adminUsername string = '' //will be overridden when the secrets are passed dynamically from the workflow
+
+@secure()
+param adminPassword string = '' //will be overridden when the secrets are passed dynamically from the workflow
+
 
 //refrence to keyvault used to retireve secrets from KV
 resource keyVaultReference 'Microsoft.KeyVault/vaults@2023-07-01'existing = {
@@ -142,6 +148,8 @@ module appServiceWebsiteBE 'modules/app-service-be.bicep' = {
   dockerRegistryImageVersion: dockerRegistryImageVersion
   connectionString: appInsights.outputs.connectionString
   instrumentationKey: appInsights.outputs.instrumentationKey
+  adminUsername: adminUsername // Pass to backend module
+  adminPassword: adminPassword // Pass to backend module
   }
   dependsOn: [
   appServicePlan
@@ -195,7 +203,6 @@ module staticWebApp 'modules/static-web-app.bicep' = {
     keyVaultSecretName: 'SWAtoken'
   }
 }
-
 
 
 
