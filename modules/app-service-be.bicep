@@ -51,7 +51,7 @@ resource appServiceApp 'Microsoft.Web/sites@2022-03-01' = {
       alwaysOn: false
       ftpsState: 'FtpsOnly'
       appCommandLine: appCommandLine
-      appSetings: mergedAppSettings
+      appSettings: mergedAppSettings
       // appSettings: union(appSettings, dockerAppSettings, appInsightsSettings)
     }
   }
