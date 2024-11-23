@@ -49,7 +49,9 @@ param appServiceBeAppSettings = [
 
 
 //step 9 - deploy swa
-param StaticWebAppName = 'bestbank-SWA-uat' //by accident - have to tell prof to delete 
+
+param StaticWebAppName = 'bestbank-SWA-uat'
+
 param SWAsku = 'Free'
 
 // //4- log analytics 
