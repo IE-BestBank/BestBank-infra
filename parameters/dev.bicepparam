@@ -62,40 +62,19 @@ param SWAsku = 'Free'
 
 
 
-// //3- DB & Server
-// // PostgreSQL parameters (aligning with app service)
-// param postgreSQLServerName = 'bestbank-dbsrv-dev' // DBHOST
-// param postgreSQLAdminUsername = 'github-secret-replaced-in-workflow' // DBUSER
-// param postgreSQLAdminPassword = 'github-secret-replaced-in-workflow' // DBPASS
-// param postgreSQLDatabaseName = 'bestbank-db-dev' // DBNAME
-// param postgreSQLSkuName = 'Standard_B1ms'
-// param postgreSQLBackupRetentionDays = 7
-// param postgreSQLGeoRedundantBackup = 'Disabled'
-// param postgreSQLStorageSizeGb = 32
+
+// //4- log analytics 
+param logAnalyticsWorkspaceName = 'BestBank-log-dev'
+param logAnalyticsDataRetention = 30 
+param logAnalyticsSkuName = 'PerGB2018'
 
 
 
-// //4- log analytics
-// param logAnalyticsWorkspaceName = 'BestBank-log-dev'
-// param logAnalyticsSkuName = 'PerGB2018'
-// param logAnalyticsDataRetention = 30
-// param publicNetworkAccessForIngestion = 'Enabled'
-// param publicNetworkAccessForQuery = 'Enabled'
 
 // //5- Application Insights
-// param appInsightsName = 'bestbank-appinsights-dev'
-// param appInsightsApplicationType = 'web'
-// param appInsightsDisableIpMasking = true
-// param appInsightsPublicNetworkAccessForIngestion = 'Enabled'
-// param appInsightsPublicNetworkAccessForQuery = 'Enabled'
-// param appInsightsRetentionInDays = 365
-// param appInsightsSamplingPercentage = 100
+param appInsightsName = 'bestbank-appinsights-dev'
+param appInsightsApplicationType = 'web'
+param appInsightsRetentionInDays = 90
 
-// //8- Static Web App Parameters
-// param staticWebAppName = 'bestbank-swa-dev'
-// param staticWebAppSku = 'Free' // Free for dev, Standard for UAT/Prod
-// param staticWebAppLocation = 'northeurope' // Keep consistent across environments
-// param staticWebAppRepositoryUrl = 'https://github.com/AlexaKhreiche/BestBank-fe'
-// param staticWebAppBranch = 'main'
-// @secure()
-// param staticWebAppRepositoryToken = 'your-github-personal-access-token' // Store securely in deployment pipeline //where do i find this?
+
+

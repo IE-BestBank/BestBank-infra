@@ -1,3 +1,40 @@
+//step 3 - deploy Log analytics
+@sys.description('Name of the Log Analytics workspace')
+param logAnalyticsWorkspaceName string
+@sys.description('SKU for the Log Analytics workspace')
+param logAnalyticsSkuName string
+@sys.description('Retention period for data in Log Analytics workspace')
+param logAnalyticsDataRetention int
+
+// Log Analytics Module
+module logAnalytics 'modules/app-log.bicep' = {
+  name: 'logAnalyticsWorkspaceDeployment'
+  params: {
+    name: logAnalyticsWorkspaceName
+    location: location
+    skuName: logAnalyticsSkuName
+    dataRetention: logAnalyticsDataRetention
+  }
+}
+
+//steo 4 - deploy app insights 
+//application-insight-paramaters 
+@sys.description('The name of the Application Insights instance')
+param appInsightsName string
+@sys.description('Application type for Application Insights')
+param appInsightsApplicationType string 
+param appInsightsRetentionInDays int
+
+module appInsights 'modules/app-appinsights.bicep' = {
+  name: appInsightsName
+  params: {
+    name: appInsightsName
+    applicationType: appInsightsApplicationType
+    WorkspaceResourceId: logAnalytics.outputs.logAnalyticsWorkspaceId
+    retentionInDays: appInsightsRetentionInDays
+    location: location
+  }
+}
 
 // step 1- deploy KeyVault with RBAC 
 @sys.description('The name of the Key Vault')
@@ -20,6 +57,7 @@ module keyVault 'modules/key-vault.bicep' = {
   name: keyVaultName
   params: {
     name: keyVaultName
+    WorkspaceResourceId: logAnalytics.outputs.logAnalyticsWorkspaceId //added for diagnostic settings 
     enableRbacAuthorization: enableRbacAuthorization
     enableVaultForDeployment: enableVaultForDeployment
     enableVaultForTemplateDeployment: enableVaultForTemplateDeployment
@@ -40,6 +78,7 @@ param adminPasswordSecretName1 string
 module containerRegistry 'modules/container-registry.bicep' = {
   name: containerRegistryName 
   params: {
+    WorkspaceResourceId: logAnalytics.outputs.logAnalyticsWorkspaceId //added for diagnostic settings 
     keyVaultResourceId: keyVault.outputs.resourceId
     keyVaultSecreNameAdminUsername: adminUsernameSecretName
     keyVaultSecreNameAdminPassword0: adminPasswordSecretName0
@@ -51,7 +90,8 @@ module containerRegistry 'modules/container-registry.bicep' = {
     keyVault 
   ]  
 }
-//step 3- Deploy App Service Plan
+
+//step 5- Deploy App Service Plan
 @description('The PostgreSQL Server name')
 param postgreSQLServerName string
 @sys.description('The name of the App Service Plan')
@@ -72,7 +112,7 @@ module appServicePlan 'modules/app-service-plan.bicep' = {
   }
 }
 
-//step 4 - deploy app service (be - cont)
+//step 6- deploy app service (be - cont)
 @sys.description('The name of the backend App Service')
 param appServiceWebsiteBEName string
 @sys.description('The name of the backend Docker image')
@@ -91,6 +131,7 @@ module appServiceWebsiteBE 'modules/app-service-be.bicep' = {
   params: {
   name: appServiceWebsiteBEName
   location: location
+  WorkspaceResourceId: logAnalytics.outputs.logAnalyticsWorkspaceId //added for diagnostic settings 
   appServicePlanId: appServicePlan.outputs.id
   appCommandLine: ''
   appSettings: appServiceBeAppSettings
@@ -99,6 +140,8 @@ module appServiceWebsiteBE 'modules/app-service-be.bicep' = {
   dockerRegistryServerPassword: keyVaultReference.getSecret(adminPasswordSecretName0)
   dockerRegistryImageName: dockerRegistryImageName
   dockerRegistryImageVersion: dockerRegistryImageVersion
+  connectionString: appInsights.outputs.connectionString
+  instrumentationKey: appInsights.outputs.instrumentationKey
   }
   dependsOn: [
   appServicePlan
@@ -107,12 +150,13 @@ module appServiceWebsiteBE 'modules/app-service-be.bicep' = {
   ]
   }
 
-//step 5- deploy server 
+//step 7- deploy server 
 param userAlias string = 'bestbank'
 module postgresSQLServer 'modules/server-postgresql.bicep' = {
   name: 'psqlsrv-${userAlias}'
   params: {
   name: postgreSQLServerName
+  WorkspaceResourceId: logAnalytics.outputs.logAnalyticsWorkspaceId //added for diagnostic settings 
   postgreSQLAdminServicePrincipalObjectId: appServiceWebsiteBE.outputs.systemAssignedIdentityPrincipalId
   postgreSQLAdminServicePrincipalName: appServiceWebsiteBEName
   }
@@ -121,7 +165,7 @@ module postgresSQLServer 'modules/server-postgresql.bicep' = {
   ]
   }
 
-//step 6- deploy databse  
+//step 8- deploy databse  
 @description('The PostgreSQL Database name')
 param postgreSQLDatabaseName string 
 
@@ -153,188 +197,11 @@ module staticWebApp 'modules/static-web-app.bicep' = {
 }
 
 
-// //step 3 - deploy db and server ...
-// @sys.description('The name of the PostgreSQL Server (DBHOST)')
-// param postgreSQLServerName string
-
-// @sys.description('The administrator username for the PostgreSQL Server (DBUSER)')
-// param postgreSQLAdminUsername string
-
-// @sys.description('The administrator password for the PostgreSQL Server (DBPASS)')
-// @secure()
-// param postgreSQLAdminPassword string
-
-// @sys.description('The name of the PostgreSQL Database (DBNAME)')
-// param postgreSQLDatabaseName string
-
-// @sys.description('Specifies the tier and SKU for the PostgreSQL Server')
-// param postgreSQLSkuName string
-
-// @sys.description('Specifies the backup retention period in days')
-// param postgreSQLBackupRetentionDays int
-
-// @sys.description('Specifies whether geo-redundant backup is enabled')
-// param postgreSQLGeoRedundantBackup string
-
-// @sys.description('Specifies the storage size in GB')
-// param postgreSQLStorageSizeGb int
-
-// module postgreSQL 'modules/postgresql.bicep' = {
-//   name: 'postgreSQL-${userAlias}'
-//   params: {
-//     serverName: postgreSQLServerName
-//     adminUsername: postgreSQLAdminUsername
-//     adminPassword: postgreSQLAdminPassword
-//     databaseName: postgreSQLDatabaseName
-//     location: location
-//     skuName: postgreSQLSkuName
-//     backupRetentionDays: postgreSQLBackupRetentionDays
-//     geoRedundantBackup: postgreSQLGeoRedundantBackup
-//     storageSizeGb: postgreSQLStorageSizeGb
-//     tags: {
-//       Environment: environmentType
-//       Application: 'BestBank'
-//     }
-//   }
-// }
-// // Outputs for PostgreSQL
-// output postgreSQLServerId string = postgreSQL.outputs.serverId
-// output postgreSQLFqdn string = postgreSQL.outputs.fullyQualifiedDomainName
-// output postgreSQLDatabaseId string = postgreSQL.outputs.databaseId
-
-
-// //step 4 - deploy LAW
-// // Log Analytics Parameters
-// @sys.description('Name of the Log Analytics workspace')
-// param logAnalyticsWorkspaceName string
-// @sys.description('SKU for the Log Analytics workspace')
-// param logAnalyticsSkuName string
-// @sys.description('Retention period for data in Log Analytics workspace')
-// param logAnalyticsDataRetention int
-// @sys.description('The network access type for ingestion')
-// param publicNetworkAccessForIngestion string
-// @sys.description('The network access type for querying')
-// param publicNetworkAccessForQuery string
-// // Log Analytics Module
-// module logAnalytics 'modules/app-log.bicep' = {
-//   name: 'logAnalyticsWorkspaceDeployment'
-//   params: {
-//     name: logAnalyticsWorkspaceName
-//     location: location
-//     skuName: logAnalyticsSkuName
-//     dataRetention: logAnalyticsDataRetention
-//     publicNetworkAccessForIngestion: publicNetworkAccessForIngestion
-//     publicNetworkAccessForQuery: publicNetworkAccessForQuery
-//     tags: {
-//       Environment: environmentType
-//     }
-//   }
-// }
-// // Output LAW ID for use in other modules (e.g., App Insights)
-// output logAnalyticsWorkspaceId string = logAnalytics.outputs.logAnalyticsWorkspaceId
-
-
-// //Step 5 - deploy AI
-// //application-insight-paramaters 
-// @sys.description('The name of the Application Insights instance')
-// param appInsightsName string
-// @sys.description('Application type for Application Insights')
-// @allowed([
-//   'web'
-//   'other'
-// ])
-// param appInsightsApplicationType string = 'web'
-// @sys.description('Disable IP masking for Application Insights')
-// param appInsightsDisableIpMasking bool = true
-// @sys.description('The network access type for ingestion in Application Insights')
-// @allowed([
-//   'Enabled'
-//   'Disabled'
-// ])
-// param appInsightsPublicNetworkAccessForIngestion string = 'Enabled'
-// @sys.description('The network access type for querying in Application Insights')
-// @allowed([
-//   'Enabled'
-//   'Disabled'
-// ])
-// param appInsightsPublicNetworkAccessForQuery string = 'Enabled'
-// @sys.description('Retention period in days for Application Insights data')
-// @allowed([
-//   30
-//   60
-//   90
-//   120
-//   180
-//   270
-//   365
-//   550
-//   730
-// ])
-// param appInsightsRetentionInDays int = 365
-// @sys.description('Sampling percentage for Application Insights telemetry')
-// @minValue(0)
-// @maxValue(100)
-// param appInsightsSamplingPercentage int = 100
-// //application-insights-module
-// // Application Insights Module
-// module appInsights 'modules/app-appinsights.bicep' = {
-//   name: 'appInsights-${userAlias}'
-//   params: {
-//     name: appInsightsName
-//     applicationType: appInsightsApplicationType
-//     workspaceResourceId: logAnalytics.outputs.logAnalyticsWorkspaceId
-//     disableIpMasking: appInsightsDisableIpMasking
-//     publicNetworkAccessForIngestion: appInsightsPublicNetworkAccessForIngestion
-//     publicNetworkAccessForQuery: appInsightsPublicNetworkAccessForQuery
-//     retentionInDays: appInsightsRetentionInDays
-//     samplingPercentage: appInsightsSamplingPercentage
-//     location: location
-//     tags: {
-//       Environment: environmentType
-//       Owner: userAlias
-//       Application: 'BestBank'
-//     }
-//   }
-// }
-// // Outputs for Application Insights
-// output appInsightsName string = appInsights.outputs.name
-// output appInsightsResourceId string = appInsights.outputs.resourceId
-// output appInsightsApplicationId string = appInsights.outputs.applicationId
-// output appInsightsInstrumentationKey string = appInsights.outputs.instrumentationKey
-// output appInsightsConnectionString string = appInsights.outputs.connectionString
 
 
 
-// //8- static web app deployment - parameters 
-// @sys.description('The name of the Static Web App')
-// param staticWebAppName string
-// @sys.description('The SKU of the Static Web App (Free/Standard)')
-// param staticWebAppSku string
-// @sys.description('The location of the Static Web App')
-// param staticWebAppLocation string
-// @sys.description('The repository URL for the Static Web App')
-// param staticWebAppRepositoryUrl string
-// @sys.description('The branch to deploy the Static Web App from')
-// param staticWebAppBranch string
-// @sys.description('The GitHub personal access token for the repository')
-// @secure()
-// param staticWebAppRepositoryToken string
 
-// //SWA deployment
-// module staticWebApp 'modules/static-web-app.bicep' = {
-//   name: 'staticWebAppDeployment'
-//   params: {
-//     name: staticWebAppName
-//     sku: staticWebAppSku
-//     location: staticWebAppLocation
-//     repositoryUrl: staticWebAppRepositoryUrl
-//     branch: staticWebAppBranch
-//     repositoryToken: staticWebAppRepositoryToken
-//     buildProperties: {
-//       appLocation: 'src'
-//       outputLocation: 'dist'
-//     }
-//   }
-// }
 
-// // output staticWebAppHostname string = staticWebApp.outputs.defaultHostname
+//app insigths creates instrumetation key used as an env var in be 
+//be and fe --> app insights so they depend on app insights 
+//log analytics --> diagnositc settings 
