@@ -6,10 +6,10 @@ param enableRbacAuthorization = true
 param enableVaultForDeployment = true
 param enableVaultForTemplateDeployment = true
 param enableSoftDelete = true
-param keyVaultRoleAssignments= [ 
+param keyVaultRoleAssignments= [
   {
     principalId: '25d8d697-c4a2-479f-96e0-15593a830ae5' // BCSAI2024-DEVOPS-STUDENTS-A-SP
-    roleDefinitionIdOrName: 'Key Vault Secrets User' //so that the SP can access the secrets such as the swa token 
+    roleDefinitionIdOrName: 'Key Vault Secrets User' //so that the SP can access the secrets such as the swa token
     principalType: 'ServicePrincipal'
     }
 ]
@@ -20,7 +20,7 @@ param adminPasswordSecretName0 = 'adminPasswordSecretName0'
 param adminPasswordSecretName1 = 'adminPasswordSecretName1'
 param adminUsernameSecretName = 'adminUsernameSecretName'
 
-//server 
+//server
 param postgreSQLServerName = 'bestbank-dbsrv-uat'
 // param administratorLogin = 'iebankdbadmin'
 // param administratorLoginPassword = ''
@@ -28,15 +28,15 @@ param postgreSQLServerName = 'bestbank-dbsrv-uat'
 //databse
 param postgreSQLDatabaseName = 'bestbank-db-uat'
 
-//6- asp 
+//6- asp
 // App Service Plan Parameters for uat
 param appServicePlanName = 'bestbank-asp-be-uat' // Unique name for the App Service Plan
 param appServicePlanSku = 'B1' // Pricing tier (e.g., F1 for free, B1 for basic
 
-//7- app service - containerized be 
+//7- app service - containerized be
 // App Service Backend Parameters for uat
 param appServiceWebsiteBEName = 'bestbank-be-uat' // Name of the backend App Service
-param dockerRegistryImageName = 'bestbank-backend' // Docker image name
+param dockerRegistryImageName = 'bestbank-be' // Docker image name
 param dockerRegistryImageVersion = 'latest' // Docker image version
 param appServiceBeAppSettings = [
   { name: 'ENV', value: 'uat' }
@@ -54,7 +54,7 @@ param SWAsku = 'Free'
 
 
 
-// // 3- DB and server 
+// // 3- DB and server
 // // PostgreSQL parameters (aligning with app service)
 // param postgreSQLServerName = 'bestbank-dbsrv-uat' // DBHOST
 // param postgreSQLAdminUsername = 'github-secret-replaced-in-workflow' // DBUSER
@@ -66,14 +66,14 @@ param SWAsku = 'Free'
 // param postgreSQLStorageSizeGb = 32
 
 
-// //4- log analytics 
+// //4- log analytics
 // param logAnalyticsWorkspaceName = 'bestbank-log-uat'
-// param logAnalyticsSkuName = 'PerGB2018'  
-// param logAnalyticsDataRetention = 30  
+// param logAnalyticsSkuName = 'PerGB2018'
+// param logAnalyticsDataRetention = 30
 // param publicNetworkAccessForIngestion = 'Enabled'
 // param publicNetworkAccessForQuery = 'Enabled'
 
-// //5- application insights 
+// //5- application insights
 // param appInsightsName = 'bestbank-appinsights-uat'
 // param appInsightsApplicationType = 'web'
 // param appInsightsDisableIpMasking = true
@@ -83,7 +83,7 @@ param SWAsku = 'Free'
 // param appInsightsSamplingPercentage = 100
 
 
-// //7- app service - containerized be 
+// //7- app service - containerized be
 // // App Service Backend Parameters for uat
 // param appServiceBackendName = 'bestbank-be-uat' // Name of the backend App Service
 // param backendDockerImageName = 'bestbank-backend' // Docker image name
