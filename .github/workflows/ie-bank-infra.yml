@@ -57,6 +57,7 @@ jobs:
         uses: bridgecrewio/checkov-action@master
         with: 
           framework: bicep
+          output-file-path: results.sarif
       
       - name: Upload SARIF file
         if: success() || failure()
