@@ -105,7 +105,7 @@ resource requestVolumeAlert 'Microsoft.Insights/metricAlerts@2022-06-15' = {
   }
 }
 
-/* Alert for Failed Connection Rate
+// Alert for Failed Connection Rate
 resource failedConnectionRateAlert 'Microsoft.Insights/scheduledQueryRules@2020-05-01-preview' = {
   name: 'FailedConnectionRateAlert'
   location: resourceGroup().location
@@ -114,19 +114,18 @@ resource failedConnectionRateAlert 'Microsoft.Insights/scheduledQueryRules@2020-
     description: 'Alert when failed database connections exceed 10%'
     enabled: true
     severity: 3
-    evaluationFrequency: 'PT5M'
-    muteActionsDuration: 'PT1H'
-    criteria: {
-      allOf: [
-        {
-          query: '''
-            let failedConnections = DatabaseConnections
-            | summarize FailedRate = (countif(Status == "Failed") / count()) * 100;
-            failedConnections | where FailedRate > 10
-          '''
-          dimensions: []
-        }
-      ]
+    source: {
+      dataSourceId: WorkspaceResourceId
+      query: '''
+        let failedConnections = AzureDiagnostics
+          | where Status_s == "Failed"
+          | summarize FailedRate = (countif(Status_s == "Failed") / count()) * 100;
+        failedConnections | where FailedRate > 10
+      '''
+    }
+    schedule: {
+      frequencyInMinutes: 5
+      timeWindowInMinutes: 15
     }
     actions: [
       {
@@ -135,4 +134,34 @@ resource failedConnectionRateAlert 'Microsoft.Insights/scheduledQueryRules@2020-
     ]
   }
 }
-*/
+
+// Alert for Failed Requests (<1%)
+resource failedRequestsAlert 'Microsoft.Insights/metricAlerts@2022-06-15' = {
+  name: 'FailedRequestsAlert'
+  location: resourceGroup().location
+  properties: {
+    description: 'Alert when failed requests exceed 1%'
+    severity: 2
+    enabled: true
+    scopes: [appInsightsId]
+    evaluationFrequency: 'PT1M'
+    windowSize: 'PT5M'
+    criteria: {
+      allOf: [
+        {
+          metricName: 'requests/failedRequests'
+          metricNamespace: 'microsoft.insights/components'
+          operator: 'GreaterThan'
+          threshold: 1
+          timeAggregation: 'Percentage'
+        }
+      ]
+    }
+    autoMitigate: true
+    actions: [
+      {
+        actionGroupId: logicAppId
+      }
+    ]
+  }
+}
