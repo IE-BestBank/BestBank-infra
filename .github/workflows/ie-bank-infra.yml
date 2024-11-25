@@ -41,7 +41,7 @@ jobs:
                 az deployment group what-if \
                   --name KeyVaultUnitTest \
                   --resource-group ${{ env.RESOURCE_GROUP_DEV }} \
-                  --template-file ./modules/keyVault.bicep \
+                  --template-file ./modules/key-vault.bicep \
                   --parameters name="test-keyvault" location="eastus" enableSoftDelete=false enableRbacAuthorization=true
 
   deploy-dev:
