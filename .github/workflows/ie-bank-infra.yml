@@ -35,6 +35,17 @@ jobs:
         run: |
           az keyvault show --name BestBank-KV-dev  --resource-group ${{ env.RESOURCE_GROUP_DEV }}
         continue-on-error: false      
+  
+  #check if Key Vault Administrator role is assigned.
+      - name: Verify Role Assignments
+        id: verify-roles
+        run: |
+          roles=$(az role assignment list --scope /subscriptions/${{ env.SUBSCRIPTION_ID_DEV }}/resourceGroups/${{ env.RESOURCE_GROUP_DEV }}/providers/Microsoft.KeyVault/vaults/BestBank-KV-dev --query '[].roleDefinitionName' -o tsv)
+          if ! echo "$roles" | grep -q "Key Vault Administrator"; then
+          echo "Key Vault Administrator role is not assigned."
+            exit 1
+          fi
+        shell: bash
     
 
   deploy-dev:
