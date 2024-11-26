@@ -206,6 +206,46 @@ module staticWebApp 'modules/static-web-app.bicep' = {
 
 
 
+// Parameters for the deployment
+param environmentType string = 'Production'  // Example value for environment type
+param appServiceAPIAppName string  // The name of the App Service to monitor
+param actionGroupName string = 'your-action-group'  // The name of your Action Group
+param slackWebhookUrl string  // Add the slack webhook URL
+
+// Resource IDs for Action Group and App Service
+var appServiceResourceId = resourceId('Microsoft.Web/sites', appServiceAPIAppName)
+var actionGroupResourceId = resourceId('Microsoft.Insights/actionGroups', actionGroupName)
+
+// Module for alert deployment
+module alerts './modules/alerts.bicep' = {
+  name: 'alerts-deployment'
+  params: {
+    alertName: 'HighCPUAlert'
+    targetResourceId: appServiceResourceId  // Reference the resource ID of the App Service
+    location: location
+    environmentType: environmentType
+    severity: 2
+    metricName: 'Percentage CPU'
+    threshold: 80
+    comparisonOperator: 'GreaterThan'
+    actionGroupId: actionGroupResourceId  // Reference the Action Group resource ID
+  }
+}
+
+// Module for Logic App deployment
+module logicApp './modules/logicapps.bicep' = {
+  name: 'logicapp-deployment'
+  params: {
+    logicAppName: 'Logic-App-dev'  // Specify the Logic App name
+    location: location  // Use location parameter from the main deployment
+    definition: loadTextContent('./logicAppDefinition.json')  // Reference the JSON file here
+    slackWebhookUrl: slackWebhookUrl  // Pass the Slack webhook URL
+  }
+}
+
+
+
+
 
 
 
