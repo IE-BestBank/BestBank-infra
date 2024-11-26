@@ -14,6 +14,9 @@ param logAnalyticsWorkspaceName string
 @description('The resource group name for resources')
 param resourceGroupName string
 
+@description('The name of the database server')
+param dbServerName string
+
 
 @description('Serialized workbook JSON content')
 param workbookJson string
@@ -25,8 +28,8 @@ resource workbook 'Microsoft.Insights/workbooks@2020-10-20' = {
     displayName: workbookName
     category: 'workbook'
     sourceId: subscriptionResourceId('Microsoft.OperationalInsights/workspaces', logAnalyticsWorkspaceName)
-    serializedData: format(workbookJson, {
-      subscriptionId: subscriptionId, resourceGroup: resourceGroupName
-    })
+    serializedData: replace(replace(replace(replace(workbookJson, '{subscriptionId}', subscriptionId), '{resourceGroup}', resourceGroupName), '{dbServerName}', dbServerName), '{logAnalyticsWorkspaceName}', logAnalyticsWorkspaceName)
+    }
   }
-}
+  
+

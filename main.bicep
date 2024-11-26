@@ -49,6 +49,7 @@ module workbook 'modules/workbook.bicep' = {
     workbookName: workbookName
     location: resourceGroup().location
     logAnalyticsWorkspaceName: logAnalyticsWorkspaceName
+    dbServerName: postgreSQLServerName
     workbookJson: workbookJson
     subscriptionId: subscription().subscriptionId
     resourceGroupName: resourceGroup().name
