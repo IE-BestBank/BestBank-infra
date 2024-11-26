@@ -1,0 +1,44 @@
+{
+    "version": "Notebook/1.0",
+    "items": [
+      {
+        "type": 1,
+        "content": {
+          "json": "# Welcome to the Azure Workbook of BestBank.\r\n## This workbook is used by BestBank's site reliability engineers to monitor the performance, reliability, and availability of BestBank's web application and other relevant resources. \r\n\r\n### SLOs and SLIs set by BestBank's SREs will also be mentioned and presented in this workbook<br><br><br><br><br><br>"
+        },
+        "name": "text - 32"
+      },
+      {
+        "type": 10,
+        "content": {
+          "chartId": "workbook01cde99b-d121-419a-8a72-6519c3c46346",
+          "version": "MetricsItem/2.0",
+          "size": 0,
+          "chartType": 2,
+          "resourceType": "microsoft.dbforpostgresql/flexibleservers",
+          "metricScope": 0,
+          "resourceIds": [
+            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/Microsoft.DBforPostgreSQL/flexibleServers/{dbServerName}"
+          ],
+          "timeContext": {
+            "durationMs": 604800000
+          },
+          "metrics": [
+            {
+              "namespace": "microsoft.dbforpostgresql/flexibleservers",
+              "metric": "microsoft.dbforpostgresql/flexibleservers-Availability-is_db_alive",
+              "aggregation": 3,
+              "splitBy": null,
+              "columnName": "Database Availability"
+            }
+          ]
+        },
+        "name": "metric - Database Availability"
+      }
+    ],
+    "fallbackResourceIds": [
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/Microsoft.OperationalInsights/workspaces/{logAnalyticsWorkspaceName}"
+    ],
+    "$schema": "https://github.com/Microsoft/Application-Insights-Workbooks/blob/master/schema/workbook.json"
+  }
+  
