@@ -47,12 +47,15 @@ module workbook 'modules/workbook.bicep' = {
   name: 'workbookDeployment'
   params: {
     workbookName: workbookName
-    location: location
-    logAnalyticsWorkspaceName: logAnalytics.outputs.logAnalyticsWorkspaceId
+    location: resourceGroup().location
+    logAnalyticsWorkspaceName: logAnalyticsWorkspaceName
     workbookJson: workbookJson
+    subscriptionId: subscription().subscriptionId
+    resourceGroupName: resourceGroup().name
   }
   dependsOn: [logAnalytics]
 }
+
 
 
 // step 1- deploy KeyVault with RBAC 
