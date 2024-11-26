@@ -24,6 +24,7 @@ param workbookJson string
 resource workbook 'Microsoft.Insights/workbooks@2020-10-20' = {
   name: workbookName
   location: location
+  kind: 'shared'
   properties: {
     displayName: workbookName
     category: 'workbook'
