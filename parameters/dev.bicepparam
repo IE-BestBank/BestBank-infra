@@ -63,5 +63,5 @@ param appInsightsApplicationType = 'web'
 param appInsightsRetentionInDays = 90 // Retention period in days
 
 // 10. Workbook Parameters
-param workbookName = 'BestBankWorkbookDev'
+param workbookName = 'BB-WRKBK-DEV'
 param workbookJson = loadTextContent('../templates/workbook-template.json')
