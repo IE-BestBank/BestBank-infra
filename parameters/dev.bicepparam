@@ -1,50 +1,42 @@
 using '../main.bicep'
 
-
-//1-Key Vault parameters
-// Key Vault Parameters
-param keyVaultName = 'BestBank-KV-dev' //changed key vault name bec of past softdelte = true
+// 1. Key Vault Parameters
+param keyVaultName = 'BestBank-KV-dev' // Changed Key Vault name due to past soft delete = true
 param enableRbacAuthorization = true
 param enableVaultForDeployment = true
 param enableVaultForTemplateDeployment = true
 param enableSoftDelete = false
-param keyVaultRoleAssignments= [
+param keyVaultRoleAssignments = [
   {
-    principalId: '25d8d697-c4a2-479f-96e0-15593a830ae5' // BCSAI2024-DEVOPS-STUDENTS-A-SP
+    principalId: '25d8d697-c4a2-479f-96e0-15593a830ae5' // Service Principal
     roleDefinitionIdOrName: 'Key Vault Secrets User'
     principalType: 'ServicePrincipal'
-    }
-    {
-      principalId: 'a03130df-486f-46ea-9d5c-70522fe056de' // BCSAI2024-DEVOPS-STUDENTS-A
-      roleDefinitionIdOrName: 'Key Vault Administrator'
-      principalType: 'Group'
-      }
+  }
+  {
+    principalId: 'a03130df-486f-46ea-9d5c-70522fe056de' // Group
+    roleDefinitionIdOrName: 'Key Vault Administrator'
+    principalType: 'Group'
+  }
 ]
 
-
-// //2- azure container-registry
+// 2. Azure Container Registry Parameters
 param containerRegistryName = 'bestbankContRegistryDev'
 param adminPasswordSecretName0 = 'adminPasswordSecretName0'
 param adminPasswordSecretName1 = 'adminPasswordSecretName1'
 param adminUsernameSecretName = 'adminUsernameSecretName'
 
-//server
+// 3. PostgreSQL Server Parameters
 param postgreSQLServerName = 'bestbank-dbsrv-dev'
-// param administratorLogin = 'iebankdbadmin'
-// param administratorLoginPassword = ''
 
-//databse
+// 4. PostgreSQL Database Parameters
 param postgreSQLDatabaseName = 'bestbank-db-dev'
 
-
-//6- ASP
-// App Service Plan parameters for the dev environment
+// 5. App Service Plan Parameters
 param appServicePlanName = 'bestbank-asp-be-dev' // Unique name for the App Service Plan
-param appServicePlanSku = 'F1' // Pricing tier (e.g., F1 for free, B1 for basic) --> i think we should do f1 for dev and b1 for uat and prod
+param appServicePlanSku = 'F1' // Free SKU for dev; can upgrade for uat/prod
 
-//7- app service - containerized be
-// App Service Backend Parameters for Dev
-param appServiceWebsiteBEName = 'bestbank-be-dev' // Name of the backend App Service
+// 6. Backend App Service Parameters (Containerized)
+param appServiceWebsiteBEName = 'bestbank-be-dev' // Backend App Service name
 param dockerRegistryImageName = 'bestbank-be' // Docker image name
 param dockerRegistryImageVersion = 'latest' // Docker image version
 param appServiceBeAppSettings = [
@@ -53,28 +45,23 @@ param appServiceBeAppSettings = [
   { name: 'DBNAME', value: 'bestbank-db-dev' }
   { name: 'DBUSER', value: 'bestbank-be-dev' }
   { name: 'FLASK_DEBUG', value: '1' }
-  { name: 'SCM_DO_BUILD_DURING_DEPLOYMENT', value:'true' }
+  { name: 'SCM_DO_BUILD_DURING_DEPLOYMENT', value: 'true' }
 ]
 
-//9 swa
+// 7. Static Web App Parameters
 param StaticWebAppName = 'bestbank-SWA-dev'
 param SWAsku = 'Free'
 
-
-
-
-// //4- log analytics 
+// 8. Log Analytics Workspace Parameters
 param logAnalyticsWorkspaceName = 'BestBank-log-dev'
-param logAnalyticsDataRetention = 30 
-param logAnalyticsSkuName = 'PerGB2018'
+param logAnalyticsDataRetention = 30 // Retention period in days
+param logAnalyticsSkuName = 'PerGB2018' // Pricing tier for Log Analytics Workspace
 
-
-
-
-// //5- Application Insights
+// 9. Application Insights Parameters
 param appInsightsName = 'bestbank-appinsights-dev'
 param appInsightsApplicationType = 'web'
-param appInsightsRetentionInDays = 90
+param appInsightsRetentionInDays = 90 // Retention period in days
 
-
-
+// 10. Workbook Parameters
+param workbookName = 'BestBank-Workbook-Dev'
+param workbookJson = loadTextContent('../templates/workbook-template.json')

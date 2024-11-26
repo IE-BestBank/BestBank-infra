@@ -64,3 +64,7 @@ param logAnalyticsSkuName = 'PerGB2018'
 param appInsightsName = 'bestbank-appinsights-uat'
 param appInsightsApplicationType = 'web'
 param appInsightsRetentionInDays = 90
+
+// 10. Workbook Parameters
+param workbookName = 'BestBank-Workbook-Dev'
+param workbookJson = loadTextContent('../templates/workbook-template.json')
