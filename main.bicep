@@ -48,14 +48,12 @@ module workbook 'modules/workbook.bicep' = {
   params: {
     workbookName: workbookName
     location: resourceGroup().location
-    logAnalyticsWorkspaceName: logAnalyticsWorkspaceName
-    dbServerName: postgreSQLServerName
-    workbookJson: workbookJson
-    subscriptionId: subscription().subscriptionId
     resourceGroupName: resourceGroup().name
+    workbookJson: workbookJson
   }
   dependsOn: [logAnalytics]
 }
+
 
 
 
