@@ -49,11 +49,10 @@ module workbook 'modules/workbook.bicep' = {
     workbookName: workbookName
     location: resourceGroup().location
     workbookJson: workbookJson
+    logAnalyticsWorkspaceId: logAnalytics.outputs.logAnalyticsWorkspaceId // Pass the resource ID
   }
   dependsOn: [logAnalytics]
 }
-
-
 
 
 

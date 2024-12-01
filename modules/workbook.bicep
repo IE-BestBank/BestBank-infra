@@ -7,6 +7,9 @@ param location string = az.resourceGroup().location
 @description('Serialized workbook JSON content')
 param workbookJson string
 
+@description('The resource ID of the Log Analytics Workspace')
+param logAnalyticsWorkspaceId string
+
 // Workbook Resource
 resource sampleWorkbook 'Microsoft.Insights/workbooks@2022-04-01' = {
   name: guid(resourceGroup().id, workbookName) // Generate a GUID for the name
@@ -16,6 +19,6 @@ resource sampleWorkbook 'Microsoft.Insights/workbooks@2022-04-01' = {
     category: 'workbook'
     displayName: workbookName
     serializedData: workbookJson // Use workbookJson parameter
-    sourceId: resourceId('Microsoft.Resources/resourceGroups', resourceGroup().name) // Dynamically retrieve resource group name
+    sourceId: logAnalyticsWorkspaceId // Reference the Log Analytics Workspace
   }
 }
