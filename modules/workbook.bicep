@@ -19,6 +19,7 @@ resource sampleWorkbook 'Microsoft.Insights/workbooks@2022-04-01' = {
     category: 'workbook'
     displayName: workbookName
     serializedData: workbookJson // Use workbookJson parameter
-    sourceId: resourceGroup().id // Use the resource group ID dynamically
+    sourceId: resourceId('Microsoft.Resources/resourceGroups', resourceGroup().name)
+
   }
 }
