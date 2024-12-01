@@ -1,36 +1,24 @@
-@description('The name of the Azure Workbook')
-param workbookName string
 
 @description('The location of the Azure Workbook')
 param location string = az.resourceGroup().location
 
-@description('The subscription ID for resources')
-param subscriptionId string
 
 
-@description('The name of the Log Analytics workspace')
-param logAnalyticsWorkspaceName string
-
-@description('The resource group name for resources')
-param resourceGroupName string
-
-@description('The name of the database server')
-param dbServerName string
+@description('The source ID for the workbook')
+param sourceId string
 
 
-@description('Serialized workbook JSON content')
-param workbookJson string
-
-resource workbook 'Microsoft.Insights/workbooks@2020-10-20' = {
-  name: workbookName
+// Workbook name needs to be guid 
+resource sampleWorkbook 'Microsoft.Insights/workbooks@2022-04-01' = {
+  name: guid('sampleWorkbook', resourceGroup().id)
   location: location
-  kind: 'shared'
+  kind:'shared'
   properties: {
-    displayName: workbookName
     category: 'workbook'
-    sourceId: subscriptionResourceId('Microsoft.OperationalInsights/workspaces', logAnalyticsWorkspaceName)
-    serializedData: replace(replace(replace(replace(workbookJson, '{subscriptionId}', subscriptionId), '{resourceGroup}', resourceGroupName), '{dbServerName}', dbServerName), '{logAnalyticsWorkspaceName}', logAnalyticsWorkspaceName)
-    }
+    displayName: 'Awesome Workbook'
+    //serializedData: replace(loadTextContent(('workbooks/workbook.json')), 'APPINSIGHTSPLACEHOLDER', appInsightsResourceId)
+    serializedData: loadTextContent('../templates/BestBankWorkbook.workbook')
+    sourceId: sourceId
   }
-  
+}
 
