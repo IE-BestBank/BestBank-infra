@@ -48,11 +48,11 @@ module workbook 'modules/workbook.bicep' = {
   params: {
     workbookName: workbookName
     location: resourceGroup().location
-    resourceGroupName: resourceGroup().name
     workbookJson: workbookJson
   }
   dependsOn: [logAnalytics]
 }
+
 
 
 
