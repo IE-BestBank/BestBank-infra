@@ -8,6 +8,7 @@ param enableRbacAuthorization = true
 param enableVaultForDeployment = true
 param enableVaultForTemplateDeployment = true
 param enableSoftDelete = false 
+param sku = 'standard'
 param keyVaultRoleAssignments= [ 
   {
     principalId: '25d8d697-c4a2-479f-96e0-15593a830ae5' // BCSAI2024-DEVOPS-STUDENTS-A-SP
@@ -23,6 +24,7 @@ param keyVaultRoleAssignments= [
 
 
 // //2- azure container-registry
+param Contsku = 'Basic'
 param containerRegistryName = 'bestbankContRegistryDev'
 param adminPasswordSecretName0 = 'adminPasswordSecretName0'
 param adminPasswordSecretName1 = 'adminPasswordSecretName1'
@@ -30,8 +32,10 @@ param adminUsernameSecretName = 'adminUsernameSecretName'
 
 //server 
 param postgreSQLServerName = 'bestbank-dbsrv-dev'
-// param administratorLogin = 'iebankdbadmin'
-// param administratorLoginPassword = ''
+param skuName = 'Standard_B1ms'
+param skuTier = 'Burstable'
+
+
 
 //databse
 param postgreSQLDatabaseName = 'bestbank-db-dev'

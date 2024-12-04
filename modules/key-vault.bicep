@@ -22,7 +22,11 @@ param enableVaultForTemplateDeployment bool = true
 param enableSoftDelete bool 
 
 @description('Specifies the SKU for the vault.')
-param sku string = 'standard'
+@allowed([
+  'premium'
+  'standard'
+])
+param sku string 
 
 
 

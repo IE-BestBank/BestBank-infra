@@ -50,6 +50,8 @@ param enableSoftDelete bool
 @sys.description('The user alias to add to the deployment name')
 param location string = resourceGroup().location
 param keyVaultRoleAssignments array = [ ]
+@secure()
+param sku string
 
 
 // Deploy Key Vault
@@ -57,6 +59,7 @@ module keyVault 'modules/key-vault.bicep' = {
   name: keyVaultName
   params: {
     name: keyVaultName
+    sku: sku
     WorkspaceResourceId: logAnalytics.outputs.logAnalyticsWorkspaceId //added for diagnostic settings 
     enableRbacAuthorization: enableRbacAuthorization
     enableVaultForDeployment: enableVaultForDeployment
@@ -74,6 +77,7 @@ param containerRegistryName string
 param adminUsernameSecretName string 
 param adminPasswordSecretName0 string
 param adminPasswordSecretName1 string
+param Contsku string 
 
 module containerRegistry 'modules/container-registry.bicep' = {
   name: containerRegistryName 
@@ -85,6 +89,7 @@ module containerRegistry 'modules/container-registry.bicep' = {
     keyVaultSecreNameAdminPassword1: adminPasswordSecretName1
     location: location
     name: containerRegistryName 
+    sku: Contsku
   }
   dependsOn: [
     keyVault 
@@ -160,9 +165,13 @@ module appServiceWebsiteBE 'modules/app-service-be.bicep' = {
 
 //step 7- deploy server 
 param userAlias string = 'bestbank'
+param skuName string
+param skuTier string
 module postgresSQLServer 'modules/server-postgresql.bicep' = {
   name: 'psqlsrv-${userAlias}'
   params: {
+  skuName: skuName
+  tier: skuTier
   name: postgreSQLServerName
   WorkspaceResourceId: logAnalytics.outputs.logAnalyticsWorkspaceId //added for diagnostic settings 
   postgreSQLAdminServicePrincipalObjectId: appServiceWebsiteBE.outputs.systemAssignedIdentityPrincipalId

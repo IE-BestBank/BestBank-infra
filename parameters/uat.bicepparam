@@ -2,6 +2,7 @@ using '../main.bicep'
 
 //1-Key Vault parameters
 param keyVaultName = 'BestBank-KV-uat'
+param sku = 'standard'
 param enableRbacAuthorization = true
 param enableVaultForDeployment = true
 param enableVaultForTemplateDeployment = true
@@ -15,6 +16,7 @@ param keyVaultRoleAssignments= [
 ]
 
 // //2 - azure container-registry
+param Contsku = 'Basic'
 param containerRegistryName = 'bestbankContRegistryUat'
 param adminPasswordSecretName0 = 'adminPasswordSecretName0'
 param adminPasswordSecretName1 = 'adminPasswordSecretName1'
@@ -22,8 +24,8 @@ param adminUsernameSecretName = 'adminUsernameSecretName'
 
 //server 
 param postgreSQLServerName = 'bestbank-dbsrv-uat'
-// param administratorLogin = 'iebankdbadmin'
-// param administratorLoginPassword = ''
+param skuName = 'Standard_B1ms'
+param skuTier = 'Burstable'
 
 //databse
 param postgreSQLDatabaseName = 'bestbank-db-uat'
@@ -31,7 +33,7 @@ param postgreSQLDatabaseName = 'bestbank-db-uat'
 //6- asp 
 // App Service Plan Parameters for uat
 param appServicePlanName = 'bestbank-asp-be-uat' // Unique name for the App Service Plan
-param appServicePlanSku = 'B1' // Pricing tier (e.g., F1 for free, B1 for basic
+param appServicePlanSku = 'F1' // Pricing tier (e.g., F1 for free, B1 for basic
 
 //7- app service - containerized be 
 // App Service Backend Parameters for uat

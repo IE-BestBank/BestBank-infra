@@ -2,14 +2,28 @@ param location string = resourceGroup().location
 param name string
 param postgreSQLAdminServicePrincipalObjectId string
 param postgreSQLAdminServicePrincipalName string
+@description('Required. The name of the sku, typically, tier + family + cores, e.g. Standard_D4s_v3.')
+param skuName string
+
+@allowed([
+  'GeneralPurpose'
+  'Burstable'
+  'MemoryOptimized'
+])
+@description('Required. The tier of the particular SKU. Tier must align with the \'skuName\' property. Example, tier cannot be \'Burstable\' if skuName is \'Standard_D4s_v3\'.')
+param tier string
 
 resource postgresSQLServer 'Microsoft.DBforPostgreSQL/flexibleServers@2022-12-01' = {
   name: name
   location: location
   sku: {
-    name: 'Standard_B1ms'
-    tier: 'Burstable'
+    name: skuName
+    tier: tier
   }
+  // sku: {
+  //   name: 'Standard_B1ms'
+  //   tier: 'Burstable'
+  // }
   properties: {
     // administratorLogin: 'iebankdbadmin'
     // administratorLoginPassword: 'IE.Bank.DB.Admin.Pa$$'
