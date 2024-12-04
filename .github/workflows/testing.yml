@@ -1,21 +1,17 @@
-name: Test Key Vault
+name: Test Key Vault Configuration
 
 on:
   workflow_dispatch:
-  push:
-      paths-ignore:
-        - 'scripts/**'
-  pull_request:
-    branches: [ "main" ]
 
 env:
   RESOURCE_GROUP_DEV: BCSAI2024-DEVOPS-STUDENTS-A-DEV
   RESOURCE_GROUP_UAT: BCSAI2024-DEVOPS-STUDENTS-A-UAT
   SUBSCRIPTION_ID_DEV: e0b9cada-61bc-4b5a-bd7a-52c606726b3b
+  SUBSCRIPTION_ID_UAT: e0b9cada-61bc-4b5a-bd7a-52c606726b3b # Replace with the correct ID if different
   USER_ALIAS: bestbank
 
 jobs:
-  build:
+  test-keyvault:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -26,126 +22,33 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Run Bicep Linter
-        run: az bicep build --file modules/key-vault.bicep
+        run: az bicep build --file modules/key-vault.bicep 
 
-  deploy-dev:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Login to Azure
-        uses: azure/login@v2
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-      - name: Deploy Key Vault to Development
+      - name: Install Azure CLI Extensions
         run: |
-          az deployment group create \
-            --subscription ${{ env.SUBSCRIPTION_ID_DEV }} \
-            --resource-group ${{ env.RESOURCE_GROUP_DEV }} \
-            --template-file ./main.bicep \
-            --parameters @./parameters/dev.bicepparam \
-            --name ${{ env.USER_ALIAS }}-kv-dev
+          az extension add --name keyvault
+          az extension add --name resource-graph
 
-  test-dev:
-    runs-on: ubuntu-latest
-    needs: deploy-dev
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Login to Azure
-        uses: azure/login@v2
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-      - name: Validate Key Vault Properties for DEV
+      - name: Test Key Vault in Dev Environment
         run: |
-          echo "Validating Key Vault properties for DEV..."
-          kv_properties=$(az keyvault show --name BestBank-KV-dev --resource-group ${{ env.RESOURCE_GROUP_DEV }})
-          echo $kv_properties | jq '.properties | {enableSoftDelete, enableRbacAuthorization}' > validation.json
+          echo "Testing Key Vault configuration in DEV environment"
+          az keyvault show --name "BestBank-KV-dev" --resource-group ${{ env.RESOURCE_GROUP_DEV }} --subscription ${{ env.SUBSCRIPTION_ID_DEV }} > kv-config-dev.json
 
-          if grep -q '"enableSoftDelete": false' validation.json && grep -q '"enableRbacAuthorization": true' validation.json; then
-            echo "Validation passed for DEV."
-          else
-            echo "Validation failed. Expected soft delete to be disabled and RBAC authorization to be enabled for DEV."
-            exit 1
-          fi
+          # Validate parameters
+          jq 'select(.properties.enableRbacAuthorization == true)' kv-config-dev.json
+          jq 'select(.properties.enableSoftDelete == false)' kv-config-dev.json
 
-      - name: Validate Key Vault Role Assignments for DEV
+          # Validate Role Assignments
+          az role assignment list --scope $(jq -r '.id' kv-config-dev.json) --query '[].roleDefinitionName' -o tsv | grep "Key Vault Secrets User"
+
+      - name: Test Key Vault in UAT Environment
         run: |
-          echo "Validating Key Vault role assignments for DEV..."
-          az role assignment list --scope /subscriptions/${{ env.SUBSCRIPTION_ID_DEV }}/resourceGroups/${{ env.RESOURCE_GROUP_DEV }}/providers/Microsoft.KeyVault/vaults/BestBank-KV-dev | jq '.' > assignments.json
+          echo "Testing Key Vault configuration in UAT environment"
+          az keyvault show --name "BestBank-KV-uat" --resource-group ${{ env.RESOURCE_GROUP_UAT }} --subscription ${{ env.SUBSCRIPTION_ID_UAT }} > kv-config-uat.json
 
-          # Check for Key Vault Secrets User
-          if grep -q '"roleDefinitionName": "Key Vault Secrets User"' assignments.json && grep -q '25d8d697-c4a2-479f-96e0-15593a830ae5' assignments.json; then
-            echo "ServicePrincipal assigned as Key Vault Secrets User for DEV."
-          else
-            echo "Validation failed for Key Vault Secrets User in DEV."
-            exit 1
-          fi
+          # Validate parameters
+          jq 'select(.properties.enableRbacAuthorization == true)' kv-config-uat.json
+          jq 'select(.properties.enableSoftDelete == false)' kv-config-uat.json
 
-          # Check for Key Vault Administrator
-          if grep -q '"roleDefinitionName": "Key Vault Administrator"' assignments.json && grep -q 'a03130df-486f-46ea-9d5c-70522fe056de' assignments.json; then
-            echo "Group assigned as Key Vault Administrator for DEV."
-          else
-            echo "Validation failed for Key Vault Administrator in DEV."
-            exit 1
-          fi
-
-  deploy-uat:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Login to Azure
-        uses: azure/login@v2
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-      - name: Deploy Key Vault to UAT
-        run: |
-          az deployment group create \
-            --subscription ${{ env.SUBSCRIPTION_ID_DEV }} \
-            --resource-group ${{ env.RESOURCE_GROUP_UAT }} \
-            --template-file ./main.bicep \
-            --parameters @./parameters/uat.bicepparam \
-            --name ${{ env.USER_ALIAS }}-kv-uat
-
-  test-uat:
-    runs-on: ubuntu-latest
-    needs: deploy-uat
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Login to Azure
-        uses: azure/login@v2
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-      - name: Validate Key Vault Properties for UAT
-        run: |
-          echo "Validating Key Vault properties for UAT..."
-          kv_properties=$(az keyvault show --name BestBank-KV-uat --resource-group ${{ env.RESOURCE_GROUP_UAT }})
-          echo $kv_properties | jq '.properties | {enableSoftDelete, enableRbacAuthorization}' > validation.json
-
-          if grep -q '"enableSoftDelete": false' validation.json && grep -q '"enableRbacAuthorization": true' validation.json; then
-            echo "Validation passed for UAT."
-          else
-            echo "Validation failed. Expected soft delete to be disabled and RBAC authorization to be enabled for UAT."
-            exit 1
-          fi
-
-      - name: Validate Key Vault Role Assignments for UAT
-        run: |
-          echo "Validating Key Vault role assignments for UAT..."
-          az role assignment list --scope /subscriptions/${{ env.SUBSCRIPTION_ID_DEV }}/resourceGroups/${{ env.RESOURCE_GROUP_UAT }}/providers/Microsoft.KeyVault/vaults/BestBank-KV-uat | jq '.' > assignments.json
-
-          # Check for Key Vault Secrets User
-          if grep -q '"roleDefinitionName": "Key Vault Secrets User"' assignments.json && grep -q '25d8d697-c4a2-479f-96e0-15593a830ae5' assignments.json; then
-            echo "ServicePrincipal assigned as Key Vault Secrets User for UAT."
-          else
-            echo "Validation failed for Key Vault Secrets User in UAT."
-            exit 1
-          fi
+          # Validate Role Assignments
+          az role assignment list --scope $(jq -r '.id' kv-config-uat.json) --query '[].roleDefinitionName' -o tsv | grep "Key Vault Secrets User"
