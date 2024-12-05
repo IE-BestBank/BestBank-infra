@@ -6,7 +6,7 @@ param sku = 'standard'
 param enableRbacAuthorization = true
 param enableVaultForDeployment = true
 param enableVaultForTemplateDeployment = true
-param enableSoftDelete = false //uat gets deleted over night now 
+param enableSoftDelete = true //uat gets deleted over night now so we need to change to softdelete = false
 param keyVaultRoleAssignments= [ 
   {
     principalId: '25d8d697-c4a2-479f-96e0-15593a830ae5' // BCSAI2024-DEVOPS-STUDENTS-A-SP

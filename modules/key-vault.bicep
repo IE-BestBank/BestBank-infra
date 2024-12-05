@@ -144,7 +144,7 @@ resource diagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-01-pr
     workspaceId: WorkspaceResourceId // Log Analytics Workspace ID - sends logs and metrics to the Log Analytics Workspace using the ID
     metrics: [
       {
-        category: 'AllMetrics' // Key Vault metrics
+        category: 'AllMetrics' // Key Vault metrics.
         enabled: true
       }
     ]
