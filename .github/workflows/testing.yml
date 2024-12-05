@@ -3,10 +3,14 @@ name: Key Vault Testing
 on:
   workflow_dispatch:
   push:
-    paths:
-      - './modules/key-vault.bicep' # Filter for changes in key-vault.bicep
-  pull_request:
-    branches: [ "main" ]
+       paths-ignore:
+            - 'scripts/**'
+
+#   push:
+#     paths:
+#       - './modules/key-vault.bicep' # Filter for changes in key-vault.bicep
+#   pull_request:
+#     branches: [ "main" ]
 
 env:
   RESOURCE_GROUP_DEV: BCSAI2024-DEVOPS-STUDENTS-A-DEV
