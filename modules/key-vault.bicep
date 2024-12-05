@@ -30,7 +30,7 @@ param sku string
 
 
 
-// Role Assignments to Grant Access to whoever you want - reuqires object ID 
+// Role Assignments to Grant Access to whoever you want - reuqires object ID .
 param roleAssignments array 
 
 var builtInRoleNames = {
