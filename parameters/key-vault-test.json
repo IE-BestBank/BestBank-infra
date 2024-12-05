@@ -36,7 +36,7 @@
     },
     
       "WorkspaceResourceId": {
-          "value": " "
+          "value": "logAnalytics.outputs.logAnalyticsWorkspaceId"
       }
 
   }
