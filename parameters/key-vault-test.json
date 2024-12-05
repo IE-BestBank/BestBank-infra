@@ -33,11 +33,6 @@
           "principalType": "Group"
         }
       ]
-    },
-    
-      "WorkspaceResourceId": {
-          "value": "logAnalytics.outputs.logAnalyticsWorkspaceId"
-      }
-
+    }
   }
 }
