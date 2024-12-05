@@ -1,12 +1,12 @@
 name: Key Vault Testing
 
 on:
-    workflow_dispatch:
-    push:
-        paths:
-          - ./modules/key-vault.bicep #filter for path 
-    pull_request:
-        branches: [ "main" ]
+  workflow_dispatch:
+  push:
+    paths:
+      - './modules/key-vault.bicep' # Filter for changes in key-vault.bicep
+  pull_request:
+    branches: [ "main" ]
 
 env:
   RESOURCE_GROUP_DEV: BCSAI2024-DEVOPS-STUDENTS-A-DEV
@@ -21,10 +21,11 @@ jobs:
 
       - name: Run Bicep Linter
         run: |
+          echo "Building and validating Bicep file syntax..."
           az bicep build --file ./modules/key-vault.bicep
 
-  test-keyvault:
-    name: Validate and Dry Run Key Vault
+  validate:
+    name: Validate Key Vault Deployment
     runs-on: ubuntu-latest
     needs: build
     steps:
@@ -38,14 +39,29 @@ jobs:
 
       - name: Dry Run Key Vault Deployment
         run: |
-            az deployment group what-if \
-              --resource-group ${{ env.RESOURCE_GROUP_DEV }} \
-              --template-file ./modules/key-vault.bicep \
-              --parameters @parameters/key-vault-test.json
-  
+          echo "Performing a dry run of the Key Vault deployment..."
+          az deployment group what-if \
+            --resource-group ${{ env.RESOURCE_GROUP_DEV }} \
+            --template-file ./modules/key-vault.bicep \
+            --parameters @parameters/key-vault-test.json
+
+  deploy:
+    name: Deploy Test Key Vault
+    runs-on: ubuntu-latest
+    needs: [build, validate]
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
       - name: Deploy Test Key Vault
         run: |
-            az deployment group create \
-              --resource-group ${{ env.RESOURCE_GROUP_DEV }} \
-              --template-file ./modules/key-vault.bicep \
-              --parameters @parameters/key-vault-test.json
+          echo "Deploying the Key Vault to the development environment..."
+          az deployment group create \
+            --resource-group ${{ env.RESOURCE_GROUP_DEV }} \
+            --template-file ./modules/key-vault.bicep \
+            --parameters @parameters/key-vault-test.json
