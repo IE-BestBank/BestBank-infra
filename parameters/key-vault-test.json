@@ -33,6 +33,11 @@
           "principalType": "Group"
         }
       ]
-    }
+    },
+    
+      "WorkspaceResourceId": {
+          "value": " "
+      }
+
   }
 }
