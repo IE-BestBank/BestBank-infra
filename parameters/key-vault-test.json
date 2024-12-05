@@ -3,7 +3,7 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "name": {
-      "value": "BestBank-KV-test"
+      "value": "Bestbank-KV-test"
     },
     "enableRbacAuthorization": {
       "value": true
@@ -35,7 +35,7 @@
       ]
     },
     "WorkspaceResourceId": {
-      "value": "logAnalyticsWorkspace.id"
+      "value": "/subscriptions/e0b9cada-61bc-4b5a-bd7a-52c606726b3b/resourceGroups/BCSAI2024-DEVOPS-STUDENTS-A-DEV/providers/Microsoft.OperationalInsights/workspaces/BestBank-log-dev"
 
     }
   }
