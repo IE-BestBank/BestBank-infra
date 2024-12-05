@@ -17,7 +17,7 @@ module logAnalytics 'modules/app-log.bicep' = {
   }
 }
 
-//steo 4 - deploy app insights 
+//step 4 - deploy app insights 
 //application-insight-paramaters 
 @sys.description('The name of the Application Insights instance')
 param appInsightsName string
@@ -206,49 +206,38 @@ module staticWebApp 'modules/static-web-app.bicep' = {
 
 
 
-// Parameters for the deployment
-param environmentType string = 'Production'  // Example value for environment type
-param appServiceAPIAppName string  // The name of the App Service to monitor
-param actionGroupName string = 'your-action-group'  // The name of your Action Group
-param slackWebhookUrl string  // Add the slack webhook URL
 
-// Resource IDs for Action Group and App Service
-var appServiceResourceId = resourceId('Microsoft.Web/sites', appServiceAPIAppName)
-var actionGroupResourceId = resourceId('Microsoft.Insights/actionGroups', actionGroupName)
+param slackWebhookUrl string
+param logicAppName string
+param actionGroupName string
 
-// Module for alert deployment
-module alerts './modules/alerts.bicep' = {
-  name: 'alerts-deployment'
-  params: {
-    alertName: 'HighCPUAlert'
-    targetResourceId: appServiceResourceId  // Reference the resource ID of the App Service
-    location: location
-    environmentType: environmentType
-    severity: 2
-    metricName: 'Percentage CPU'
-    threshold: 80
-    comparisonOperator: 'GreaterThan'
-    actionGroupId: actionGroupResourceId  // Reference the Action Group resource ID
-  }
-}
+var logicAppWebhookUrl = 'https://<Logic-App-Webhook-URL>' // Replace with the correct Logic App trigger URL
 
-// Module for Logic App deployment
-module logicApp './modules/logicapps.bicep' = {
+module logicApp 'modules/logicapps.bicep' = {
   name: 'logicapp-deployment'
   params: {
-    logicAppName: 'Logic-App-dev'  // Specify the Logic App name
-    location: location  // Use location parameter from the main deployment
-    definition: loadTextContent('./logicAppDefinition.json')  // Reference the JSON file here
-    slackWebhookUrl: slackWebhookUrl  // Pass the Slack webhook URL
+    logicAppName: logicAppName
+    location: location
+    environmentType: 'nonprod'
+    slackWebhookUrl: slackWebhookUrl
   }
 }
 
+// Action Group Deployment
+module actionGroup 'modules/actions-group.bicep' = {
+  name: 'actiongroup-deployment'
+  params: {
+    actionGroupName: actionGroupName
+    logicAppWebhookUrl: logicAppWebhookUrl
+  }
+}
 
-
-
-
-
-
-//app insigths creates instrumetation key used as an env var in be 
-//be and fe --> app insights so they depend on app insights 
-//log analytics --> diagnositc settings 
+// Alerts Deployment
+module alerts 'modules/alerts.bicep' = {
+  name: 'alerts-deployment'
+  params: {
+    appInsightsId: appInsights.outputs.appInsightsId
+    WorkspaceResourceId: logAnalytics.outputs.logAnalyticsWorkspaceId
+    actionGroupId: actionGroup.outputs.id
+  }
+}
