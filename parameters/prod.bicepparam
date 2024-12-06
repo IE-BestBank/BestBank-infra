@@ -62,7 +62,7 @@ param SWAsku = 'Standard'
 // //4- log analytics 
 param logAnalyticsWorkspaceName = 'BestBank-log-prod'
 param logAnalyticsDataRetention = 30 
-param logAnalyticsSkuName = 'Standard'
+param logAnalyticsSkuName = 'PerGB2018' //standard and free dont work - not supported anymore
 
 
 
