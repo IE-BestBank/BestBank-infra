@@ -65,7 +65,8 @@ jobs:
           deploymentName: ${{ env.USER_ALIAS }}-uat
 
   deploy-prod:
-    if: (github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main') || github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main'
+      #(github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main') || github.ref == 'refs/heads/main'
       #github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     needs: [deploy-uat]
