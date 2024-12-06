@@ -1,3 +1,23 @@
+name: ie-bank-infra
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - 'scripts/**'
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch: {}
+
+env:
+  RESOURCE_GROUP_DEV: BCSAI2024-DEVOPS-STUDENTS-A-DEV
+  RESOURCE_GROUP_UAT: BCSAI2024-DEVOPS-STUDENTS-A-UAT
+  RESOURCE_GROUP_PROD: BCSAI2024-DEVOPS-STUDENTS-A-PROD
+  SUBSCRIPTION_ID_DEV: e0b9cada-61bc-4b5a-bd7a-52c606726b3b
+  USER_ALIAS: bestbank
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -22,6 +42,7 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.Webhook_URL }}
         run: |
           az deployment group create \
+            --subscription ${{ env.SUBSCRIPTION_ID_DEV }} \
             --resource-group ${{ env.RESOURCE_GROUP_DEV }} \
             --template-file ./main.bicep \
             --parameters @./parameters/dev.bicepparam \
@@ -46,6 +67,7 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.Webhook_URL }}
         run: |
           az deployment group create \
+            --subscription ${{ env.SUBSCRIPTION_ID_DEV }} \
             --resource-group ${{ env.RESOURCE_GROUP_UAT }} \
             --template-file ./main.bicep \
             --parameters @./parameters/uat.bicepparam \
