@@ -1,0 +1,482 @@
+{
+  "version": "Notebook/1.0",
+  "items": [
+    {
+      "type": 1,
+      "content": {
+        "json": "# Welcome to the Azure Workbook of BestBank.\r\n## This workbook is used by BestBank's site reliability engineers to monitor the performance, reliablity, and availablity of BestBank's web application and other relevant resources. \r\n\r\n### SLOs and SLIs set by BestBank's SREs will also be mentioned and presented in this workbook<br><br><br><br><br><br>"
+      },
+      "name": "text - 32"
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "\n\n## The following barchart includes basic analytics query from BestBank's Log Analytics Workspace."
+      },
+      "name": "text - 2"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "union withsource=[\"$TableName\"] *\n| summarize Count=count() by TableName=[\"$TableName\"]\n| render barchart\n",
+        "size": 1,
+        "timeContext": {
+          "durationMs": 2592000000
+        },
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces"
+      },
+      "name": "query - 2"
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "<br><br>\r\n## This bar chart shows the total count of PostgreSQL logs generated every hour. It provides insights into the database activity levels over time, helping to identify patterns, peaks, or unusual spikes in logging that may indicate potential performance issues or errors.\r\n"
+      },
+      "name": "text - 6"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "// Bar Chart\r\nAzureDiagnostics\r\n| where Category == \"PostgreSQLLogs\"\r\n| summarize Count = count() by bin(TimeGenerated, 1h)\r\n| order by TimeGenerated asc\r\n| render barchart\r\n",
+        "size": 0,
+        "timeContext": {
+          "durationMs": 86400000
+        },
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces"
+      },
+      "name": "query - 2"
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "## This line chart displays the number of active PostgreSQL sessions over time, grouped hourly. It helps monitor database connectivity trends, identify periods of high usage, and detect anomalies in session activity that may indicate performance or resource issues.\r\n\r\n## **Service Level Indicator**: Throughput of the Database Server."
+      },
+      "name": "text - 7"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "// Line Chart: Active PostgreSQL Sessions Over Time\r\nAzureDiagnostics\r\n| where Category == \"PostgreSQLFlexSessions\"\r\n| summarize ActiveSessions = count() by bin(TimeGenerated, 1h)\r\n| order by TimeGenerated asc\r\n| render timechart\r\n",
+        "size": 0,
+        "timeContext": {
+          "durationMs": 86400000
+        },
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces"
+      },
+      "name": "query - 3"
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "## The following *compliance rate* calculates the precentage of time the SLO is met. This is measured by the count of active PostgreSQL sessions over time (hourly). \r\n\r\n## SLO: 95% of the time, the database should handle at least 45 active sessions per hour over a 30-day period"
+      },
+      "name": "text - 8"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "AzureDiagnostics\r\n| where Category == \"PostgreSQLFlexSessions\"\r\n| summarize HourlySessions = count() by bin(TimeGenerated, 1h)\r\n| extend MeetsSLO = iff(HourlySessions >= 45, 1, 0)\r\n| summarize ComplianceRate = sum(MeetsSLO) * 100.0 / count()\r\n",
+        "size": 0,
+        "timeContext": {
+          "durationMs": 86400000
+        },
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "gridSettings": {
+          "sortBy": [
+            {
+              "itemKey": "ComplianceRate",
+              "sortOrder": 2
+            }
+          ]
+        },
+        "sortBy": [
+          {
+            "itemKey": "ComplianceRate",
+            "sortOrder": 2
+          }
+        ]
+      },
+      "name": "query - 9"
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "<br><br><br><br>\r\n## SLO 1: 99% Uptime for Database & Key Vault (graphs track uptime for the last 7 days)"
+      },
+      "name": "text - 31"
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "## The following line chart shows the database availability over the last 7 days"
+      },
+      "name": "text - 11"
+    },
+    {
+      "type": 10,
+      "content": {
+        "chartId": "workbook01cde99b-d121-419a-8a72-6519c3c46346",
+        "version": "MetricsItem/2.0",
+        "size": 0,
+        "chartType": 2,
+        "color": "blue",
+        "resourceType": "microsoft.dbforpostgresql/flexibleservers",
+        "metricScope": 0,
+        "resourceIds": [
+          "/subscriptions/e0b9cada-61bc-4b5a-bd7a-52c606726b3b/resourceGroups/BCSAI2024-DEVOPS-STUDENTS-A-UAT/providers/Microsoft.DBforPostgreSQL/flexibleServers/bestbank-dbsrv-uat"
+        ],
+        "timeContext": {
+          "durationMs": 604800000
+        },
+        "metrics": [
+          {
+            "namespace": "microsoft.dbforpostgresql/flexibleservers",
+            "metric": "microsoft.dbforpostgresql/flexibleservers-Availability-is_db_alive",
+            "aggregation": 3,
+            "columnName": "Database Availability"
+          }
+        ],
+        "gridSettings": {
+          "rowLimit": 10000
+        }
+      },
+      "name": "metric - 10"
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "## The following line chart shows the availability of the key vault over the last 7 days"
+      },
+      "name": "text - 12"
+    },
+    {
+      "type": 10,
+      "content": {
+        "chartId": "workbook83108c6c-179e-47f2-8fd9-ccefcb173e5a",
+        "version": "MetricsItem/2.0",
+        "size": 0,
+        "chartType": 2,
+        "resourceType": "microsoft.keyvault/vaults",
+        "metricScope": 0,
+        "resourceIds": [
+          "/subscriptions/e0b9cada-61bc-4b5a-bd7a-52c606726b3b/resourceGroups/BCSAI2024-DEVOPS-STUDENTS-A-UAT/providers/Microsoft.KeyVault/vaults/BestBank-KV-uat"
+        ],
+        "timeContext": {
+          "durationMs": 604800000
+        },
+        "metrics": [
+          {
+            "namespace": "microsoft.keyvault/vaults",
+            "metric": "microsoft.keyvault/vaults--Availability",
+            "aggregation": 4,
+            "columnName": "Vault Availability"
+          }
+        ],
+        "gridSettings": {
+          "rowLimit": 10000
+        }
+      },
+      "name": "metric - 13"
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "<br><br><br><br>\r\n## SLO 2: Average HTTP Response Time"
+      },
+      "name": "text - 32"
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "## Average Response Time by Status Code\r\n\r\n## The table below shows the average time taken (in milliseconds) to process HTTP requests for each response status code. This metric provides insight into the server's performance and responsiveness:\r\n\r\n499 (Client Error): The client disconnected before the server could complete the request, resulting in a significantly high average processing time (likely due to the server continuing to process the request before realizing the client disconnected). <br>\r\n200 (Success): Successful requests are processed efficiently, with an average response time of 115.25 ms.<br>\r\n404 (Not Found): Requests for resources that do not exist on the server"
+      },
+      "name": "text - 21"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "AppServiceHTTPLogs\r\n| summarize AvgTimeTaken = avg(TimeTaken) by ScStatus\r\n| order by AvgTimeTaken desc\r\n",
+        "size": 0,
+        "timeContext": {
+          "durationMs": 86400000
+        },
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces"
+      },
+      "name": "query - 22"
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "## The following line chart shows the response time of BestBank's backend (app service)"
+      },
+      "name": "text - 17"
+    },
+    {
+      "type": 10,
+      "content": {
+        "chartId": "workbook90af2bac-009d-428a-a939-3b332685ac7c",
+        "version": "MetricsItem/2.0",
+        "size": 0,
+        "chartType": 2,
+        "resourceType": "microsoft.web/sites",
+        "metricScope": 0,
+        "resourceIds": [
+          "/subscriptions/e0b9cada-61bc-4b5a-bd7a-52c606726b3b/resourceGroups/BCSAI2024-DEVOPS-STUDENTS-A-UAT/providers/Microsoft.Web/sites/bestbank-be-uat"
+        ],
+        "timeContext": {
+          "durationMs": 259200000
+        },
+        "metrics": [
+          {
+            "namespace": "microsoft.web/sites",
+            "metric": "microsoft.web/sites--AverageResponseTime",
+            "aggregation": 1
+          }
+        ],
+        "gridFormatType": 1,
+        "tileSettings": {
+          "showBorder": false,
+          "titleContent": {
+            "columnMatch": "Name",
+            "formatter": 13
+          },
+          "leftContent": {
+            "columnMatch": "Value",
+            "formatter": 12,
+            "formatOptions": {
+              "palette": "auto"
+            },
+            "numberFormat": {
+              "unit": 17,
+              "options": {
+                "maximumSignificantDigits": 3,
+                "maximumFractionDigits": 2
+              }
+            }
+          }
+        },
+        "gridSettings": {
+          "rowLimit": 10000
+        }
+      },
+      "name": "metric - 16"
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "## HTTP Response Status Summary\r\n## The table below provides a summary of the HTTP response status codes recorded in the application logs. Each status code represents the outcome of an HTTP request, categorized as follows:\r\n\r\n200 (Success): The request was successfully processed by the server. <br>\r\n404 (Not Found): The requested resource could not be found on the server.<br>\r\n499 (Client Error): The client closed the connection before the server could complete processing the request."
+      },
+      "name": "text - 31"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "AppServiceHTTPLogs\r\n| summarize Count = count() by ScStatus\r\n| order by Count desc\r\n",
+        "size": 0,
+        "timeContext": {
+          "durationMs": 86400000
+        },
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces"
+      },
+      "name": "query - 20"
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "## SLO 3: Request Volume Tracking"
+      },
+      "name": "text - 33"
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "## Request Volume Over Time\r\n\r\n## The table below shows the distribution of HTTP requests over time, grouped by hour"
+      },
+      "name": "text - 27"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "AppServiceHTTPLogs\r\n| summarize RequestCount = count() by bin(TimeGenerated, 1h)\r\n| order by TimeGenerated asc\r\n",
+        "size": 0,
+        "timeContext": {
+          "durationMs": 86400000
+        },
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces"
+      },
+      "name": "query - 28"
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "## The table below lists the client IP addresses (CIP) that made requests to the server, along with the count of requests from each IP. This data provides insight into the distribution of traffic across clients:"
+      },
+      "name": "text - 23"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "AppServiceHTTPLogs\r\n| summarize RequestCount = count() by CIp\r\n| top 10 by RequestCount desc\r\n",
+        "size": 0,
+        "timeContext": {
+          "durationMs": 86400000
+        },
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces"
+      },
+      "name": "query - 24"
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "## Number of unique visitors to our web-app:"
+      },
+      "name": "text - 29"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "AppServiceHTTPLogs\r\n| summarize UniqueVisitors = dcount(CIp)\r\n",
+        "size": 0,
+        "timeContext": {
+          "durationMs": 86400000
+        },
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces"
+      },
+      "name": "query - 30"
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "<br><br><br><br>\r\n## SLO 4: Failed Connection Rate"
+      },
+      "name": "text - 34"
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "## The following line chart shows the acticve and failed connections to the database:"
+      },
+      "name": "text - 11"
+    },
+    {
+      "type": 10,
+      "content": {
+        "chartId": "workbook8c749e50-c4b4-4667-865d-d7cbd8315039",
+        "version": "MetricsItem/2.0",
+        "size": 0,
+        "chartType": 2,
+        "resourceType": "microsoft.dbforpostgresql/flexibleservers",
+        "metricScope": 0,
+        "resourceIds": [
+          "/subscriptions/e0b9cada-61bc-4b5a-bd7a-52c606726b3b/resourceGroups/BCSAI2024-DEVOPS-STUDENTS-A-UAT/providers/Microsoft.DBforPostgreSQL/flexibleServers/bestbank-dbsrv-uat"
+        ],
+        "timeContext": {
+          "durationMs": 259200000
+        },
+        "metrics": [
+          {
+            "namespace": "microsoft.dbforpostgresql/flexibleservers",
+            "metric": "microsoft.dbforpostgresql/flexibleservers-Errors-connections_failed",
+            "aggregation": 1,
+            "columnName": "Failed Connections"
+          },
+          {
+            "namespace": "microsoft.dbforpostgresql/flexibleservers",
+            "metric": "microsoft.dbforpostgresql/flexibleservers-Traffic-active_connections",
+            "aggregation": 4
+          }
+        ],
+        "gridSettings": {
+          "rowLimit": 10000
+        }
+      },
+      "name": "metric - 12"
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "<br><br><br><br><br>\r\n## SLO 5: Less Than 1% Failed Requests"
+      },
+      "name": "text - 35"
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "## The table below provides a breakdown of the number of requests for each HTTP method (GET, POST, PUT, DELETE) recorded in the application logs:\r\n\r\n**GET**: Represents the highest number of requests, typically used to retrieve data from the server.<br>\r\n**POST**: Used for creating or submitting data to the server, with a moderate number of requests.<br>\r\n**PUT**: Indicates update operations, with fewer requests compared to GET and POST.<br>\r\n**DELETE**: Represents requests for deleting resources, which are the least frequent.<br>"
+      },
+      "name": "text - 30"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "AppServiceHTTPLogs\r\n| summarize RequestCount = count() by CsMethod\r\n| where CsMethod in (\"GET\", \"POST\", \"PUT\", \"DELETE\")\r\n| order by RequestCount desc\r\n",
+        "size": 0,
+        "timeContext": {
+          "durationMs": 86400000
+        },
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces"
+      },
+      "name": "query - 31"
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "## The following line chart shows the number of failed requests (HTTP 5xx) from BestBank's backend (app service) over the last 3 days"
+      },
+      "name": "text - 14"
+    },
+    {
+      "type": 10,
+      "content": {
+        "chartId": "workbookc7e03626-4dcf-4251-bd32-0b5712b15deb",
+        "version": "MetricsItem/2.0",
+        "size": 0,
+        "chartType": 2,
+        "resourceType": "microsoft.web/sites",
+        "metricScope": 0,
+        "resourceIds": [
+          "/subscriptions/e0b9cada-61bc-4b5a-bd7a-52c606726b3b/resourceGroups/BCSAI2024-DEVOPS-STUDENTS-A-UAT/providers/Microsoft.Web/sites/bestbank-be-uat"
+        ],
+        "timeContext": {
+          "durationMs": 259200000
+        },
+        "metrics": [
+          {
+            "namespace": "microsoft.web/sites",
+            "metric": "microsoft.web/sites--Http5xx",
+            "aggregation": 1,
+            "columnName": "Failed requests"
+          }
+        ],
+        "gridSettings": {
+          "rowLimit": 10000
+        }
+      },
+      "name": "metric - 15"
+    }
+  ],
+  "fallbackResourceIds": [
+    "/subscriptions/e0b9cada-61bc-4b5a-bd7a-52c606726b3b/resourceGroups/BCSAI2024-DEVOPS-STUDENTS-A-UAT/providers/Microsoft.OperationalInsights/workspaces/BestBank-log-uat"
+  ],
+  "$schema": "https://github.com/Microsoft/Application-Insights-Workbooks/blob/master/schema/workbook.json"
+}
