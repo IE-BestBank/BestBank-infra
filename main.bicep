@@ -54,6 +54,8 @@ module workbook 'modules/workbook.bicep' = {
   dependsOn: [logAnalytics]
 }
 
+
+
 // step 1- deploy KeyVault with RBAC 
 @sys.description('The name of the Key Vault')
 param keyVaultName string

@@ -1,0 +1,5 @@
+# This is a CODEOWNERS file for the Bestbank-infra repository.
+
+# Global owner for the entire repository
+* @AlexaKhreiche
+
