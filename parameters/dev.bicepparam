@@ -68,3 +68,5 @@ param workbookJson = loadTextContent('../templates/BestBankWorkbook.workbook')
 
 // 12. Logic App Parameters
 param logicAppName = 'bestbank-logicapp-dev'
+
+

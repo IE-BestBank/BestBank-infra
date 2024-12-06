@@ -230,7 +230,7 @@ param logicAppName string // Will be passed from the deployment pipeline
 
 @description('Slack Webhook URL for sending alerts')
 @secure()
-param slackWebhookUrl string = '' // Default empty value
+param slackWebhookUrl string // Dynamically passed during deployment
 
 module logicApp 'modules/logic-app.bicep' = {
   name: logicAppName
