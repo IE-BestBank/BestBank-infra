@@ -42,7 +42,7 @@ jobs:
           subscriptionId: ${{ env.SUBSCRIPTION_ID_DEV }}
           resourceGroupName: ${{ env.RESOURCE_GROUP_DEV }}
           template: ./main.bicep
-          parameters: |
+          parameters: >
             ./parameters/dev.bicepparam
             slackWebhookUrl=${{ secrets.Webhook_URL }}
             adminUsername=${{ secrets.DEFAULT_ADMIN_USERNAME }}
@@ -68,7 +68,7 @@ jobs:
           subscriptionId: ${{ env.SUBSCRIPTION_ID_DEV }}
           resourceGroupName: ${{ env.RESOURCE_GROUP_UAT }}
           template: ./main.bicep
-          parameters: |
+          parameters: >
             ./parameters/uat.bicepparam
             slackWebhookUrl=${{ secrets.Webhook_URL }}
             adminUsername=${{ secrets.DEFAULT_ADMIN_USERNAME }}
