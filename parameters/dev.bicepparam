@@ -15,7 +15,7 @@ param keyVaultRoleAssignments= [
     principalType: 'ServicePrincipal'
   }
   {
-    principalId: 'a03130df-486f-46ea-9d5c-70522fe056de' // Group
+    principalId: 'a03130df-486f-46ea-9d5c-70522fe056de' // Group.
     roleDefinitionIdOrName: 'Key Vault Administrator'
     principalType: 'Group'
   }
