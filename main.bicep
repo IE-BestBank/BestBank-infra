@@ -243,7 +243,7 @@ module logicApp 'modules/logic-app.bicep' = {
     staticWebApp // Ensures the Logic App deploys after the static web app
   ]
 }
-
+// Added comment
 //app insigths creates instrumetation key used as an env var in be 
 //be and fe --> app insights so they depend on app insights 
 //log analytics --> diagnositc settings 
