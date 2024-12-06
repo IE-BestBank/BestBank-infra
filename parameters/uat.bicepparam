@@ -68,3 +68,6 @@ param workbookJson = loadTextContent('../templates/BestBankWorkbook.workbook')
 
 // 12. Logic App Parameters
 param logicAppName = 'bestbank-logicapp-uat'
+
+// 13. Slack Webhook URL Parameter
+param slackWebhookUrl = '' // This will be passed dynamically from GitHub secrets
