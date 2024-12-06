@@ -71,7 +71,6 @@ param enableSoftDelete bool
 param location string = resourceGroup().location
 param keyVaultRoleAssignments array = [ ]
 
-
 // Deploy Key Vault
 module keyVault 'modules/key-vault.bicep' = {
   name: keyVaultName
