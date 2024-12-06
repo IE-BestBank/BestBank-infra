@@ -69,6 +69,4 @@ param appInsightsName = 'bestbank-appinsights-uat'
 param appInsightsApplicationType = 'web'
 param appInsightsRetentionInDays = 90
 
-// 10. Workbook Parameters
-param workbookName = 'bestbankWorkbookUat'
-param workbookJson = loadTextContent('../templates/BestBankWorkbook.workbook')
+

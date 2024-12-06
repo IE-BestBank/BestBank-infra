@@ -36,25 +36,6 @@ module appInsights 'modules/app-appinsights.bicep' = {
   }
 }
 
-@description('The name of the Workbook')
-param workbookName string
-
-@description('The JSON template for the Workbook')
-@secure()
-param workbookJson string
-
-module workbook 'modules/workbook.bicep' = {
-  name: 'workbookDeployment'
-  params: {
-    workbookName: workbookName
-    location: resourceGroup().location
-    workbookJson: workbookJson
-    logAnalyticsWorkspaceId: logAnalytics.outputs.logAnalyticsWorkspaceId // Pass the resource ID
-  }
-  dependsOn: [logAnalytics]
-}
-
-
 
 // step 1- deploy KeyVault with RBAC 
 @sys.description('The name of the Key Vault')
