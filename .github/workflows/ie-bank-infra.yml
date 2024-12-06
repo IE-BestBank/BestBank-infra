@@ -1,4 +1,29 @@
+name: ie-bank-infra
+
+on:
+  workflow_dispatch: {}
+  push:
+    paths-ignore:
+      - 'scripts/**'
+  pull_request:
+    branches:
+      - main
+
+env:
+  RESOURCE_GROUP_DEV: BCSAI2024-DEVOPS-STUDENTS-A-DEV
+  RESOURCE_GROUP_UAT: BCSAI2024-DEVOPS-STUDENTS-A-UAT
+  RESOURCE_GROUP_PROD: BCSAI2024-DEVOPS-STUDENTS-A-PROD
+  SUBSCRIPTION_ID_DEV: e0b9cada-61bc-4b5a-bd7a-52c606726b3b
+  USER_ALIAS: bestbank
+
 jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run Bicep linter
+        run: az bicep build --file ./main.bicep
+
   deploy-dev:
     runs-on: ubuntu-latest
     needs: build
@@ -23,6 +48,7 @@ jobs:
           deploymentName: ${{ env.USER_ALIAS }}-dev
 
   deploy-uat:
+    if: (github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main') || github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     needs: [build, deploy-dev]
     environment:
