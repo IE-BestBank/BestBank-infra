@@ -4,8 +4,8 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - './modules/key-vault.bicep/**' # Trigger when key-vault.bicep changes
-      - './parameters/key-vault-test.json/**' # Trigger when key-vault-test.json changes
+      - 'modules/key-vault.bicep/**' # Trigger when key-vault.bicep changes
+      - 'parameters/key-vault-test.json/**' # Trigger when key-vault-test.json changes
 
 
 env:
@@ -42,7 +42,7 @@ jobs:
           echo "Performing a dry run of the Key Vault deployment..."
           az deployment group what-if \
             --resource-group ${{ env.RESOURCE_GROUP_DEV }} \
-            --template-file ./modules/key-vault.bicep \
+            --template-file modules/key-vault.bicep \
             --parameters @parameters/key-vault-test.json
 
   deploy:
@@ -63,5 +63,5 @@ jobs:
           echo "Deploying the Key Vault to the development environment..."
           az deployment group create \
             --resource-group ${{ env.RESOURCE_GROUP_DEV }} \
-            --template-file ./modules/key-vault.bicep \
+            --template-file modules/key-vault.bicep \
             --parameters @parameters/key-vault-test.json
