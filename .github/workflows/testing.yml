@@ -4,8 +4,8 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - 'modules/key-vault.bicep/**' # Trigger when key-vault.bicep changes
-      - 'parameters/key-vault-test.json/**' # Trigger when key-vault-test.json changes
+      - 'modules/key-vault.bicep' # Trigger when key-vault.bicep changes
+      - 'parameters/key-vault-test.json' # Trigger when key-vault-test.json changes
 
 
 env:
