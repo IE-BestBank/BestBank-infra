@@ -5,21 +5,27 @@ param keyVaultName = 'BestBank-KV-dev' // Changed Key Vault name due to past sof
 param enableRbacAuthorization = true
 param enableVaultForDeployment = true
 param enableVaultForTemplateDeployment = true
-param enableSoftDelete = false
-param keyVaultRoleAssignments = [
+
+param enableSoftDelete = false 
+param sku = 'standard'
+param keyVaultRoleAssignments= [ 
   {
     principalId: '25d8d697-c4a2-479f-96e0-15593a830ae5' // Service Principal
     roleDefinitionIdOrName: 'Key Vault Secrets User'
     principalType: 'ServicePrincipal'
   }
   {
-    principalId: 'a03130df-486f-46ea-9d5c-70522fe056de' // Group
+    principalId: 'a03130df-486f-46ea-9d5c-70522fe056de' // Group.
     roleDefinitionIdOrName: 'Key Vault Administrator'
     principalType: 'Group'
   }
 ]
 
-// 2. Azure Container Registry Parameters
+
+
+// //2- azure container-registry
+param Contsku = 'Basic'
+
 param containerRegistryName = 'bestbankContRegistryDev'
 param adminPasswordSecretName0 = 'adminPasswordSecretName0'
 param adminPasswordSecretName1 = 'adminPasswordSecretName1'
@@ -27,6 +33,11 @@ param adminUsernameSecretName = 'adminUsernameSecretName'
 
 // 3. PostgreSQL Server Parameters
 param postgreSQLServerName = 'bestbank-dbsrv-dev'
+
+param skuName = 'Standard_B1ms'
+param skuTier = 'Burstable'
+
+
 
 // 4. PostgreSQL Database Parameters
 param postgreSQLDatabaseName = 'bestbank-db-dev'
@@ -62,6 +73,4 @@ param appInsightsName = 'bestbank-appinsights-dev'
 param appInsightsApplicationType = 'web'
 param appInsightsRetentionInDays = 90 // Retention period in days
 
-// 10. Workbook Parameters
-param workbookName = 'bestbankWorkbookDev'
-param workbookJson = loadTextContent('../templates/BestBankWorkbook.workbook')
+

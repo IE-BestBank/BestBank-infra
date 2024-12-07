@@ -7,11 +7,19 @@ param keyVaultSecreNameAdminPassword0 string
 #disable-next-line secure-secrets-in-params
 param keyVaultSecreNameAdminPassword1 string
 
+@description('Optional. Tier of your Azure container registry.')
+@allowed([
+  'Basic'
+  'Premium'
+  'Standard'
+])
+param sku string 
+
 resource containerRegistry 'Microsoft.ContainerRegistry/registries@2023-07-01' = {
   name: name
   location: location
   sku: {
-    name: 'Basic' // Basic SKU for dev
+    name: sku
   }
   properties: {
     adminUserEnabled: true // Enable admin credentials

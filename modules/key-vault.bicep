@@ -22,7 +22,11 @@ param enableVaultForTemplateDeployment bool = true
 param enableSoftDelete bool 
 
 @description('Specifies the SKU for the vault.')
-param sku string = 'standard'
+@allowed([
+  'premium'
+  'standard'
+])
+param sku string 
 
 
 
@@ -88,7 +92,7 @@ var builtInRoleNames = {
   )
 }
 
-// Key Vault Resource
+// Key Vault Resource...
 resource keyVault 'Microsoft.KeyVault/vaults@2022-07-01' = {
   name: name
   location: location
@@ -140,7 +144,7 @@ resource diagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-01-pr
     workspaceId: WorkspaceResourceId // Log Analytics Workspace ID - sends logs and metrics to the Log Analytics Workspace using the ID
     metrics: [
       {
-        category: 'AllMetrics' // Key Vault metrics
+        category: 'AllMetrics' // Key Vault metrics.
         enabled: true
       }
     ]
