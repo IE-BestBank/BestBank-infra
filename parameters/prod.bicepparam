@@ -1,5 +1,5 @@
 using '../main.bicep'
-
+#trigger
 
 //1-Key Vault parameters
 // Key Vault Parameters
