@@ -61,7 +61,7 @@ param appServiceBeAppSettings = [
 
 // 7. Static Web App Parameters
 param StaticWebAppName = 'bestbank-SWA-dev'
-param SWAsku = 'Free'
+param SWAsku = 'Standard'
 
 // 8. Log Analytics Workspace Parameters
 param logAnalyticsWorkspaceName = 'BestBank-log-dev'
