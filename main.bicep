@@ -234,9 +234,25 @@ module staticWebApp 'modules/static-web-app.bicep' = {
   }
 }
 
+// Step 10 - Deploy Logic App
+@description('The name of the Logic App')
+param logicAppName string // Will be passed from the deployment pipeline
 
+@description('Slack Webhook URL for sending alerts')
+@secure()
+param slackWebhookUrl string // Dynamically passed during deployment
 
-
+module logicApp 'modules/logic-app.bicep' = {
+  name: logicAppName
+  params: {
+    location: location
+    logicAppName: logicAppName
+    slackWebhookUrl: slackWebhookUrl
+  }
+  dependsOn: [
+    staticWebApp // Ensures the Logic App deploys after the static web app
+  ]
+}
 
 
 //app insigths creates instrumetation key used as an env var in be 

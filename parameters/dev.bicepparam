@@ -77,3 +77,5 @@ param appInsightsRetentionInDays = 90 // Retention period in days
 param workbookName = 'bestbankWorkbookDEV'
 param workbookJson = loadTextContent('../templates/BestBankWorkbook.workbook')
 
+param logicAppName = 'bestbank-logicapp-dev'
+param slackWebhookUrl = 'https://example.com/placeholder' // Placeholder value
