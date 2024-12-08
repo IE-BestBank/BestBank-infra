@@ -17,7 +17,7 @@ param keyVaultRoleAssignments= [
     }
 ]
 
-// //2 - azure container-registry
+// 2 - azure container-registry
 param Contsku = 'Basic'
 param containerRegistryName = 'bestbankContRegistryUat'
 param adminPasswordSecretName0 = 'adminPasswordSecretName0'
